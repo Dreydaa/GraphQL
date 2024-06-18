@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>GraphQL</title>
+</head>
+
+<body>
+    <div class="form-container">
+        <p class="title">Login</p>
+
+        <form id="loginForm" class="form">
+            <p>Username/Email</p>
+            <div class="input-group">
+                <label for="loginIdentifier"></label>
+                <input type="text" name="loginIdentifier" id="loginIdentifier" placeholder="">
+            </div>
+            <p>Password</p>
+            <div class="input-group">
+                <label for="password"></label>
+                <input type="password" name="password" id="password" class="password" placeholder="">
+            </div>
+
+            <div class="button-container">
+                <button onclick="handleLogin()" class="sign">Sign in</button>
+            </div>
+    </div>
+    </form>
+
+    <button type="button" onclick="handleLogin()">Logout</button>
+
+    <div id="message"></div>
+    <div id="dataContainer"></div>
+    <div id="ChartsContainer"></div>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>
