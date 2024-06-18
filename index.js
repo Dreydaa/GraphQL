@@ -4,14 +4,14 @@ const messageDiv = document.getElementById('message');
 
 
 async function handleLogin() {
+    const loginIdentifer = loginIdentifierInput.value;
+    const password = passwordInput.value;
     
     if (!loginIdentifer || !password) {
         messageDiv.textContent('both fields are required')
         return;
     }
     
-    const loginIdentifer = loginIdentifierInput.value;
-    const password = passwordInput.value;
 
     const credentials = btoa(`${loginIdentifer}:${password}`);
     const signinEndPoint = 'https://zone01normandie.org/api/auth/signin';
