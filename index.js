@@ -1,14 +1,14 @@
 console.log("ici");
 
-const loginSection = document.querySelectorAll(".loginSection");
+const loginSection = document.getElementById("loginSection");
 const profileSection = document.getElementById("profileSection")/* [0] */;
 const userInput = document.getElementById("userInput");
 const passInput = document.getElementById("passInput");
-const signInBtn = document.querySelectorAll(".signInBtn");
+const signInBtn = document.getElementById(".signInBtn");
 const loginError = document.getElementById("loginError");
 const displayUsername = document.getElementById("displayUsername")/* [0] */;
 const userDataContainer = document.getElementById("userData")/* [0] */;
-const signOutBtn = document.querySelectorAll("signOutBtn");
+const signOutBtn = document.getElementById("signOutBtn");
 
 let jwtToken = null;
 
