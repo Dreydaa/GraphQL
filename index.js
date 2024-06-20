@@ -13,7 +13,7 @@ const signOutBtn = document.querySelectorAll("signOutBtn");
 let jwtToken = null;
 
 async function authentificateUser() {
-    console.log("rpes");
+    console.log("authUser");
     const username = userInput.value;
     const password = passInput.value;
     const base64Credentials = btoa(`${username}:${password}`);
@@ -51,6 +51,7 @@ async function authentificateUser() {
 }
 
 async function fetchUserData(token) {
+    console.log("fetch USER DATA");
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -92,6 +93,7 @@ async function fetchUserData(token) {
 }
 
 async function fetchXPData(token) {
+    console.log("fetch XP DATA");
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -131,6 +133,7 @@ async function fetchXPData(token) {
 }
 
 async function fetchSkillData(token) {
+    console.log("fetch SKILL DATA");
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -168,6 +171,7 @@ async function fetchSkillData(token) {
 }
 
 function renderXPChart(transactions) {
+    console.log("RENDER XPXHART");
     const filteredTransactions = transactions.filter(txn => txn.path.includes("/div-01") && !txn.path.includes("piscine-js/"));
     const xpData = filteredTransactions.filter(txn => txn.type === "xp");
     const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -201,6 +205,7 @@ function renderXPChart(transactions) {
 }
 
 function renderSkillPieChart(skills) {
+    console.log("RENDER SKILL PIE CHARTS");
     const svgContainer = document.getElementById('skillsChartContainer');
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
@@ -257,6 +262,7 @@ function renderSkillPieChart(skills) {
 }
 
 function getRandomColor() {
+    console.log("get random color");
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
@@ -266,6 +272,7 @@ function getRandomColor() {
 }
 
 function logoutUser() {
+    console.log("logout user");
     jwtToken = null;
     userInput.value = '';
     passInput.value = '';
