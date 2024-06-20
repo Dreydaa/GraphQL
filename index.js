@@ -47,7 +47,7 @@ async function authentificateUser() {
         profileSection.style.display = 'block';
 
         console.log("Skill Levels:");
-    const skillLevels = createSkills(skill); // Utilisez createSkills avec les données de compétence
+    const skillLevels = createSkills(skillData); // Utilisez createSkills avec les données de compétence
     console.log(skillLevels);
     Object.entries(skillLevels).forEach(([skillType, level]) => {
       console.log(`${skillType}: ${level}`);
