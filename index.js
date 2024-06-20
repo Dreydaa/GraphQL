@@ -555,7 +555,7 @@ function renderSkillChart(skillLevels) {
 renderSkillChart(skillLevels); */
 
 
-const skills = [
+/* const skills = [
     { type: "skill_A", amount: 30 },
     { type: "skill_B", amount: 40 },
     { type: "skill_C", amount: 50 },
@@ -621,8 +621,8 @@ const skills = [
     { type: "skill_D", amount: 20 },
     { type: "skill_C", amount: 50 },
     { type: "skill_D", amount: 20 },
-    { type: "skill_D", amount: 20 }
-];
+    { type: "skill_D", amount: 20 } 
+];*/
 
 renderSkillChart(skills);
 

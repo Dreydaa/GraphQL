@@ -115,13 +115,13 @@
     /* height: 500px;
     width: 1000px;
     background-color: darkred; */
-    bottom: 0;
+    top: 10%;
     display: flex; 
     position: absolute;
 }
 #skillsChartContainer {
     position: absolute;
     left: 0;
-    top:10%;
+    top:65%;
     position: absolute;
 } 
