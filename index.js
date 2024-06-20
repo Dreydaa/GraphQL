@@ -424,7 +424,7 @@ function renderXPChart(transactions) {
         yAxisLabel.setAttribute('x', '5');
         yAxisLabel.setAttribute('y', (i / 10) * svgHeight - 5);
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(maxXP * (10 - i) / 10);
+        yAxisLabel.textContent = Math.round(maxXP * (10- i) / 10);
         svg.appendChild(yAxisLabel);
     }
 
@@ -460,20 +460,26 @@ function renderSkillChart(skillLevels) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const width = 1000;
-    const height = 1000;
+    const svgWidth = 400;
+    const svgHeight = 600;
+    const padding = 40;  // Padding for the axis labels and ticks
 
-    if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
-        console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
+    if (isNaN(svgHeight) || isNaN(svgWidth) || svgHeight <= 0 || svgWidth <= 0) {
+        console.error(`Invalid dimensions for SVG container: height=${svgHeight}, width=${svgWidth}`);
         return;
     }
 
+    const chartWidth = svgWidth - 2 * padding;
+    const chartHeight = svgHeight - 2 * padding;
+
+    svglvlContainer.innerHTML = '';  // Clear any existing content
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', '100%');
+    svg.setAttribute('width', svgWidth);
+    svg.setAttribute('height', svgHeight);
 
     const numSkills = Object.keys(skillLevels).length;
-    const barWidth = width / numSkills;
+    const barWidth = chartWidth / numSkills;
 
     if (isNaN(barWidth) || barWidth <= 0) {
         console.error(`Invalid bar width calculated: barWidth=${barWidth}`);
@@ -488,9 +494,9 @@ function renderSkillChart(skillLevels) {
             continue;
         }
 
-        const barHeight = (skillAmount / 100) * height;
-        const xPosition = index * barWidth;
-        const yPosition = height - barHeight;
+        const barHeight = (skillAmount / 100) * chartHeight;
+        const xPosition = padding + index * barWidth;
+        const yPosition = padding + chartHeight - barHeight;
 
         if (isNaN(xPosition) || isNaN(yPosition) || isNaN(barHeight)) {
             console.error(`NaN detected in bar chart: x=${xPosition}, y=${yPosition}, width=${barWidth}, height=${barHeight}`);
@@ -500,42 +506,64 @@ function renderSkillChart(skillLevels) {
         const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bar.setAttribute('x', xPosition);
         bar.setAttribute('y', yPosition);
-        bar.setAttribute('width', barWidth);
+        bar.setAttribute('width', barWidth - 10);  // Subtract some value for spacing
         bar.setAttribute('height', barHeight);
         bar.setAttribute('fill', '#4267B2');
         svg.appendChild(bar);
 
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', xPosition + barWidth / 2);
-        label.setAttribute('y', height - 5);
+        label.setAttribute('x', xPosition + (barWidth - 10) / 2);
+        label.setAttribute('y', svgHeight - padding + 15);
         label.setAttribute('fill', '#333');
         label.setAttribute('text-anchor', 'middle');
         label.textContent = skillType.substring(skillType.indexOf('_') + 1);
-        label.style.writingMode = 'vertical-lr';
-        label.style.fontSize = '14px';
         svg.appendChild(label);
         index++;
     }
 
-    for (let i = 0; i <= 11; i++) {
+    // Create Y-axis ticks and labels
+    for (let i = 0; i <= 10; i++) {
         const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        yAxisTick.setAttribute('x1', '0');
-        yAxisTick.setAttribute('x2', width);
-        yAxisTick.setAttribute('y1', (i / 10) * height);
-        yAxisTick.setAttribute('y2', (i / 10) * height);
+        yAxisTick.setAttribute('x1', padding);
+        yAxisTick.setAttribute('x2', svgWidth - padding);
+        yAxisTick.setAttribute('y1', padding + (i / 10) * chartHeight);
+        yAxisTick.setAttribute('y2', padding + (i / 10) * chartHeight);
         yAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(yAxisTick);
 
         const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        yAxisLabel.setAttribute('x', '5');
-        yAxisLabel.setAttribute('y', height - (i / 10) * height - 5);
+        yAxisLabel.setAttribute('x', padding - 10);
+        yAxisLabel.setAttribute('y', padding + (i / 10) * chartHeight + 5);
+        yAxisLabel.setAttribute('text-anchor', 'end');
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(100 * i / 10);
+        yAxisLabel.textContent = Math.round(100 * (10 - i) / 10);
         svg.appendChild(yAxisLabel);
     }
 
     svglvlContainer.appendChild(svg);
 }
+
+// Example usage
+const skillLevels = {
+    skill_A: { amount: 30 },
+    skill_B: { amount: 40 },
+    skill_C: { amount: 50 },
+    skill_D: { amount: 20 },
+    skill_E: { amount: 10 }
+};
+
+renderSkillChart(skillLevels);
+
+
+const skills = [
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 }
+];
+
+renderSkillChart(skills);
 
 function logoutUser() {
     console.log("logout user");
