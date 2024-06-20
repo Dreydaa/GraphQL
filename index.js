@@ -375,8 +375,8 @@ function renderXPChart(transactions) {
     console.log("Filtered and sorted XP data:", sortedXPData);
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const svgWidth = 800;
-    const svgHeight = 300;
+    const svgWidth = 1000;
+    const svgHeight = 500;
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
     svgContainer.innerHTML = '';  // Clear any existing content
