@@ -184,7 +184,7 @@ function renderXPChart(transactions) {
     const sortedData = data.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     // Create the SVG container
 
-    const svgContainer = document.getElementById('svgxpcontainer');
+    const svgContainer = document.getElementById('xpChartContainer');
     const height = parseInt(svgContainer.style.height);
     const width = parseInt(svgContainer.style.width);
 
@@ -270,7 +270,7 @@ function renderSkillPieChart(skillLevels) {
 
     console.log(skillLevels)
 
-    const svglvlContainer = document.getElementById('svglvlcontainer');
+    const svglvlContainer = document.getElementById('skillsChartContainer');
     const height = parseInt(svglvlContainer.style.height);
     const width = parseInt(svglvlContainer.style.width);
 
