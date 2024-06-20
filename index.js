@@ -192,9 +192,8 @@ function renderXPChart(transactions) {
     const sortedData = data.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const rect = svgContainer.getBoundingClientRect();
-    const width = rect.width || svgContainer.offsetWidth;
-    const height = rect.height || svgContainer.offsetHeight;
+    const width = 600;
+    const height = 400;
 
     if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
         console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
@@ -289,9 +288,8 @@ function formatDate(date) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const rect = svglvlContainer.getBoundingClientRect();
-    const width = rect.width || svglvlContainer.offsetWidth;
-    const height = rect.height || svglvlContainer.offsetHeight;
+    const width = 600;
+    const height = 400;
 
     if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
         console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
