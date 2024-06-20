@@ -461,13 +461,12 @@ function renderXPChart(transactions) {
     }
 }
 
-function renderSkillDoughnutChart(skills) {
-    console.log("Rendering skill doughnut chart with skills:", skills);
+function renderSkillColumnChart(skills) {
+    console.log("Rendering skill column chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = 100;
-    const svgHeight = 100;
-    const radius = Math.min(svgWidth, svgHeight) / 2;
-    const innerRadius = radius / 2; // Inner radius for the doughnut hole
+    const svgWidth = 100;  // Default width if not set
+    const svgHeight = 1000;  // Default height if not set
+    const padding = 40;  // Padding for the chart
 
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
@@ -481,8 +480,7 @@ function renderSkillDoughnutChart(skills) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('transform', `translate(${svgWidth / 2},${svgHeight / 2})`);
+    svgContainer.appendChild(svg);
 
     const totalAmount = skills.reduce((acc, skill) => acc + skill.amount, 0);
     console.log("Total skill amount:", totalAmount);
@@ -492,48 +490,45 @@ function renderSkillDoughnutChart(skills) {
         return;
     }
 
-    let startAngle = 0;
+    const maxAmount = Math.max(...skills.map(skill => skill.amount));
+    const barWidth = (svgWidth - 2 * padding) / skills.length;
 
-    skills.forEach(skill => {
-        const sliceAngle = (skill.amount / totalAmount) * 2 * Math.PI;
-        const endAngle = startAngle + sliceAngle;
+    skills.forEach((skill, index) => {
+        const barHeight = (skill.amount / maxAmount) * (svgHeight - 2 * padding);
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', padding + index * barWidth);
+        rect.setAttribute('y', svgHeight - padding - barHeight);
+        rect.setAttribute('width', barWidth - 10);  // Subtract some value for spacing
+        rect.setAttribute('height', barHeight);
+        rect.setAttribute('fill', getRandomColor());
+        svg.appendChild(rect);
 
-        const x1 = (radius * Math.cos(startAngle)).toFixed(2);
-        const y1 = (radius * Math.sin(startAngle)).toFixed(2);
-        const x2 = (radius * Math.cos(endAngle)).toFixed(2);
-        const y2 = (radius * Math.sin(endAngle)).toFixed(2);
-
-        const largeArcFlag = sliceAngle > Math.PI ? 1 : 0;
-
-        const pathData = [
-            `M ${x1} ${y1}`,
-            `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-            `L ${(innerRadius * Math.cos(endAngle)).toFixed(2)} ${(innerRadius * Math.sin(endAngle)).toFixed(2)}`,
-            `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${(innerRadius * Math.cos(startAngle)).toFixed(2)} ${(innerRadius * Math.sin(startAngle)).toFixed(2)}`,
-            `L ${x1} ${y1}`
-        ].join(' ');
-
-        console.log("Path data for slice:", pathData);
-
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', pathData);
-        path.setAttribute('fill', getRandomColor());
-
-        g.appendChild(path);
-
-        startAngle += sliceAngle;
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', padding + index * barWidth + (barWidth - 10) / 2);
+        text.setAttribute('y', svgHeight - padding + 15);
+        text.setAttribute('text-anchor', 'middle');
+        text.textContent = skill.type.split('_')[1];
+        svg.appendChild(text);
     });
 
-    // Add a white circle in the middle to create the doughnut hole
-    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    innerCircle.setAttribute('cx', 0);
-    innerCircle.setAttribute('cy', 0);
-    innerCircle.setAttribute('r', innerRadius);
-    innerCircle.setAttribute('fill', '#fff');
-    g.appendChild(innerCircle);
+    // Create Y-axis ticks and labels
+    for (let i = 0; i <= 10; i++) {
+        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxisTick.setAttribute('x1', padding);
+        yAxisTick.setAttribute('x2', svgWidth - padding);
+        yAxisTick.setAttribute('y1', padding + i * (svgHeight - 2 * padding) / 10);
+        yAxisTick.setAttribute('y2', padding + i * (svgHeight - 2 * padding) / 10);
+        yAxisTick.setAttribute('stroke', '#ccc');
+        svg.appendChild(yAxisTick);
 
-    svg.appendChild(g);
-    svgContainer.appendChild(svg);
+        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yAxisLabel.setAttribute('x', padding - 10);
+        yAxisLabel.setAttribute('y', padding + i * (svgHeight - 2 * padding) / 10 + 5);
+        yAxisLabel.setAttribute('text-anchor', 'end');
+        yAxisLabel.setAttribute('fill', '#333');
+        yAxisLabel.textContent = Math.round(maxAmount * (10 - i) / 10);
+        svg.appendChild(yAxisLabel);
+    }
 }
 
 function getRandomColor() {
@@ -544,9 +539,6 @@ function getRandomColor() {
     }
     return color;
 }
-
-
-
 
 
 
