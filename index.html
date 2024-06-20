@@ -17,25 +17,29 @@
             <p>Username/Email</p>
             <div class="input-group">
                 <label for="loginIdentifier"></label>
-                <input type="text" name="loginIdentifier" id="loginIdentifier" placeholder="">
+                <input type="text" name="loginIdentifier" id="userInput" placeholder="">
             </div>
             <p>Password</p>
             <div class="input-group">
                 <label for="password"></label>
-                <input type="password" name="password" id="password" class="password" placeholder="">
+                <input type="password" name="password" id="passInput" class="password" placeholder="">
             </div>
-
+            
             <div class="button-container">
-                <button onclick="handleLogin()" class="sign">Sign in</button>
+                <button onclick="authentificateUser()" class="signInBtn">Sign in</button>
+                <p id="loginError"></p>
             </div>
     </div>
     </form>
 
-    <button type="button" onclick="handleLogin()">Logout</button>
 
-    <div id="message"></div>
-    <div id="dataContainer"></div>
-    <div id="ChartsContainer"></div>
+    <div  id="profileSection" style="display: none;">
+    <p>Welcome, <span id="displayUsername"></span></p>
+    <div id="userData"></div>
+    <div id="xpChartContainer" style="width: 600px; height: 300px;"></div>
+    <div id="skillsChartContainer" style="width: 600px; height: 300px;"></div>
+    <button id="signOutBtn" onclick="logoutUser()">Sign out</button>
+    </div>
 
     <script src="index.js"></script>
 
