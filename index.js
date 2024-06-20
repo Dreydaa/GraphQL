@@ -11,9 +11,9 @@ const signOutBtn = document.getElementById("signOutBtn");
 let jwtToken = null;
 
 async function authenticateUser() {
-    const usernameOrEmail = userInput.value;
-    const password = passInput.value;
-    const base64Credentials = btoa(`${usernameOrEmail}:${password}`);
+    const username = document.getElementById('userInput').value;
+    const password = document.getElementById('password').value;
+    const base64Credentials = btoa(`${username}:${password}`);
 
     try {
         const response = await fetch('https://zone01normandie.org/api/auth/signin', {
