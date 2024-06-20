@@ -107,6 +107,8 @@ async function fetchXPData(token) {
                 query: `
                 query {
                     user {
+                        id
+                        attrs
                         transactions {
                             type
                             amount
