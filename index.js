@@ -175,23 +175,23 @@ async function fetchSkillData(token) {
 function formatDate(date) {
     const options = { month: 'short', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
-  }
-
-function renderXPChart(transactions) {
-    console.log("RENDER XPXHART");
+}
+  function renderXPChart(transactions) {
+    console.log("Rendering XP chart with transactions:", transactions);
     const filteredTransactions = transactions.filter(txn => txn.path.includes("/div-01") && !txn.path.includes("piscine-js/"));
     const xpData = filteredTransactions.filter(txn => txn.type === "xp");
     const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    console.log("Filtered and sorted XP data:", sortedXPData);
 
     const svgContainer = document.getElementById('xpChartContainer');
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
 
-    svgContainer.innerHTML = '';
+    svgContainer.innerHTML = '';  // Clear any existing content
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '600px');
-    svg.setAttribute('height', '300px');
+    svg.setAttribute('width', svgWidth);
+    svg.setAttribute('height', svgHeight);
 
     const accumulatedXP = [];
     let totalXP = 0;
@@ -199,22 +199,20 @@ function renderXPChart(transactions) {
         totalXP += entry.amount;
         accumulatedXP.push({ x: index, y: totalXP });
     });
+    console.log("Accumulated XP data:", accumulatedXP);
 
-    /* const maxXP = Math.max(...accumulatedXP.map(d => d.y)); */
-    const maxXP = Math.ceil(Math.max(accumulatedXP));
+    const maxXP = Math.max(...accumulatedXP.map(d => d.y));
     const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
+    console.log("Line points for XP chart:", linePoints);
 
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     polyline.setAttribute('points', linePoints);
     polyline.setAttribute('fill', 'none');
     polyline.setAttribute('stroke', '#4267B2');
     polyline.setAttribute('stroke-width', 2);
+    svg.appendChild(polyline);
 
-    const dateStep = 30 * 24 * 60 * 60 * 1000;
-    const startDate = new Date(sortedXPData[0].createdAt);
-    const endDate = new Date(sortedXPData[sortedXPData.length - 1].createdAt);
-    const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() +1;
-
+    // Create Y-axis ticks and labels
     for (let i = 0; i <= 10; i++) {
         const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         yAxisTick.setAttribute('x1', '0');
@@ -223,6 +221,7 @@ function renderXPChart(transactions) {
         yAxisTick.setAttribute('y2', (i / 10) * svgHeight);
         yAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(yAxisTick);
+
         const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         yAxisLabel.setAttribute('x', '5');
         yAxisLabel.setAttribute('y', (i / 10) * svgHeight - 5);
@@ -231,8 +230,15 @@ function renderXPChart(transactions) {
         svg.appendChild(yAxisLabel);
     }
 
+    // Create X-axis ticks and labels
+    const dateStep = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    const startDate = new Date(sortedXPData[0].createdAt);
+    const endDate = new Date(sortedXPData[sortedXPData.length - 1].createdAt);
+    const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() + 1;
+
     for (let i = 0; i <= monthsDifference; i++) {
         const dateForTick = new Date(startDate.getTime() + (i / monthsDifference) * monthsDifference * dateStep);
+
         const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         xAxisTick.setAttribute('x1', (i / monthsDifference) * svgWidth);
         xAxisTick.setAttribute('x2', (i / monthsDifference) * svgWidth);
@@ -240,6 +246,7 @@ function renderXPChart(transactions) {
         xAxisTick.setAttribute('y2', svgHeight);
         xAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(xAxisTick);
+
         const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         xAxisLabel.setAttribute('x', (i / monthsDifference) * svgWidth);
         xAxisLabel.setAttribute('y', svgHeight - 5);
@@ -249,17 +256,16 @@ function renderXPChart(transactions) {
     }
 
     svgContainer.appendChild(svg);
-    return accumulatedXP;
 }
 
 function renderSkillPieChart(skills) {
-    console.log("RENDER SKILL PIE CHARTS");
+    console.log("Rendering skill pie chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
     const radius = Math.min(svgWidth, svgHeight) / 2;
 
-    svgContainer.innerHTML = '';    
+    svgContainer.innerHTML = '';  // Clear any existing content
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
@@ -268,6 +274,7 @@ function renderSkillPieChart(skills) {
     g.setAttribute('transform', `translate(${svgWidth / 2},${svgHeight / 2})`);
 
     const totalAmount = skills.reduce((acc, skill) => acc + skill.amount, 0);
+    console.log("Total skill amount:", totalAmount);
     let startAngle = 0;
 
     skills.forEach(skill => {
