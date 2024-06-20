@@ -460,7 +460,7 @@ function renderSkillChart(skillLevels) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = 1980;
+    const svgWidth = 2000;
     const svgHeight = 600;
     const padding = 40;  // Padding for the axis labels and ticks
 
@@ -560,7 +560,68 @@ const skills = [
     { type: "skill_B", amount: 40 },
     { type: "skill_C", amount: 50 },
     { type: "skill_D", amount: 20 },
-    { type: "skill_E", amount: 10 }
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_E", amount: 10 },
+    { type: "skill_A", amount: 30 },
+    { type: "skill_B", amount: 40 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_C", amount: 50 },
+    { type: "skill_D", amount: 20 },
+    { type: "skill_D", amount: 20 }
 ];
 
 renderSkillChart(skills);
