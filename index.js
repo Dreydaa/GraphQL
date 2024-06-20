@@ -41,7 +41,7 @@ async function authentificateUser() {
 
         displayUsername.textContent = user.attrs.firstName;
         renderXPChart(xpData);
-        renderSkillColumnChart(skillData);
+        renderSkillBarChart(skillData);
 
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
@@ -461,11 +461,11 @@ function renderXPChart(transactions) {
     }
 }
 
-function renderSkillColumnChart(skills) {
-    console.log("Rendering skill column chart with skills:", skills);
+function renderSkillBarChart(skills) {
+    console.log("Rendering skill bar chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = 100;  // Default width if not set
-    const svgHeight = 1000;  // Default height if not set
+    const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth || 600;  // Default width if not set
+    const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight || 300;  // Default height if not set
     const padding = 40;  // Padding for the chart
 
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
@@ -491,43 +491,44 @@ function renderSkillColumnChart(skills) {
     }
 
     const maxAmount = Math.max(...skills.map(skill => skill.amount));
-    const barWidth = (svgWidth - 2 * padding) / skills.length;
+    const barHeight = (svgHeight - 2 * padding) / skills.length;
 
     skills.forEach((skill, index) => {
-        const barHeight = (skill.amount / maxAmount) * (svgHeight - 2 * padding);
+        const barWidth = (skill.amount / maxAmount) * (svgWidth - 2 * padding);
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', padding + index * barWidth);
-        rect.setAttribute('y', svgHeight - padding - barHeight);
-        rect.setAttribute('width', barWidth - 10);  // Subtract some value for spacing
-        rect.setAttribute('height', barHeight);
+        rect.setAttribute('x', padding);
+        rect.setAttribute('y', padding + index * barHeight);
+        rect.setAttribute('width', barWidth);
+        rect.setAttribute('height', barHeight - 10);  // Subtract some value for spacing
         rect.setAttribute('fill', getRandomColor());
         svg.appendChild(rect);
 
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', padding + index * barWidth + (barWidth - 10) / 2);
-        text.setAttribute('y', svgHeight - padding + 15);
-        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('x', padding - 10);
+        text.setAttribute('y', padding + index * barHeight + (barHeight - 10) / 2);
+        text.setAttribute('text-anchor', 'end');
+        text.setAttribute('alignment-baseline', 'middle');
         text.textContent = skill.type.split('_')[1];
         svg.appendChild(text);
     });
 
-    // Create Y-axis ticks and labels
+    // Create X-axis ticks and labels
     for (let i = 0; i <= 10; i++) {
-        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        yAxisTick.setAttribute('x1', padding);
-        yAxisTick.setAttribute('x2', svgWidth - padding);
-        yAxisTick.setAttribute('y1', padding + i * (svgHeight - 2 * padding) / 10);
-        yAxisTick.setAttribute('y2', padding + i * (svgHeight - 2 * padding) / 10);
-        yAxisTick.setAttribute('stroke', '#ccc');
-        svg.appendChild(yAxisTick);
+        const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        xAxisTick.setAttribute('x1', padding + i * (svgWidth - 2 * padding) / 10);
+        xAxisTick.setAttribute('x2', padding + i * (svgWidth - 2 * padding) / 10);
+        xAxisTick.setAttribute('y1', padding);
+        xAxisTick.setAttribute('y2', svgHeight - padding);
+        xAxisTick.setAttribute('stroke', '#ccc');
+        svg.appendChild(xAxisTick);
 
-        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        yAxisLabel.setAttribute('x', padding - 10);
-        yAxisLabel.setAttribute('y', padding + i * (svgHeight - 2 * padding) / 10 + 5);
-        yAxisLabel.setAttribute('text-anchor', 'end');
-        yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(maxAmount * (10 - i) / 10);
-        svg.appendChild(yAxisLabel);
+        const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xAxisLabel.setAttribute('x', padding + i * (svgWidth - 2 * padding) / 10);
+        xAxisLabel.setAttribute('y', svgHeight - padding + 20);
+        xAxisLabel.setAttribute('text-anchor', 'middle');
+        xAxisLabel.setAttribute('fill', '#333');
+        xAxisLabel.textContent = Math.round(maxAmount * i / 10);
+        svg.appendChild(xAxisLabel);
     }
 }
 
@@ -539,8 +540,6 @@ function getRandomColor() {
     }
     return color;
 }
-
-
 
 function logoutUser() {
     console.log("logout user");
