@@ -182,8 +182,8 @@ function renderXPChart(transactions) {
     console.log("Filtered and sorted XP data:", sortedXPData);
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth;
-    const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight;
+    const svgWidth = parseInt(svgContainer.style.width);
+    const svgHeight = parseInt(svgContainer.style.height);
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
     svgContainer.innerHTML = '';  // Clear any existing content
@@ -194,8 +194,8 @@ function renderXPChart(transactions) {
     }
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', svgWidth);
-    svg.setAttribute('height', svgHeight);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
     svgContainer.appendChild(svg);
 
     const accumulatedXP = [];
@@ -281,8 +281,8 @@ function formatDate(date) {
 function renderSkillPieChart(skills) {
     console.log("Rendering skill pie chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth;
-    const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight;
+    const svgWidth = parseInt(svgContainer.style.width);
+    const svgHeight = parseInt(svgContainer.style.height);
     const radius = Math.min(svgWidth, svgHeight) / 2;
 
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
