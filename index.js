@@ -32,13 +32,12 @@ async function authentificateUser() {
             throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
-        jwtToken = data.token;
-        console.log("login successful:", jwtToken);
+        token = await response.json();
+        console.log("login successful:", token);
 
-        const user = await fetchUserData(jwtToken);
-        const xpData = await fetchXPData(jwtToken);
-        const skillData = await fetchSkillData(jwtToken);
+        const user = await fetchUserData(token);
+        const xpData = await fetchXPData(token);
+        const skillData = await fetchSkillData(token);
 
         displayUsername.textContent = user.attrs.firstName;
         renderXPChart(xpData);
@@ -276,7 +275,7 @@ function getRandomColor() {
 
 function logoutUser() {
     console.log("logout user");
-    jwtToken = null;
+    token = null;
     userInput.value = '';
     passInput.value = '';
     loginSection.style.display = 'block';
