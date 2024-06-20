@@ -24,14 +24,17 @@
                 <label for="passInput"></label>
             </div>
             <div class="button-container">
-            <button class="signInBtn" id="signInBtn" onclick="authentificateUser()">Login</button>
-            <p id="loginError"></p>
+                <button class="signInBtn" id="signInBtn" onclick="authentificateUser()">Login</button>
+                <p id="loginError"></p>
             </div>
         </div>
     </div>
-    <div id="profileSection" style="display:none;">
-        <p>Welcome, <span id="displayUsername"></span></p>
+    <div id="profileSection" style="display:flex;">
         <div id="userData"></div>
+        <div class="Username">
+            <div class="displayUsername" id="displayUsername">
+            </div>
+        </div>
         <div id="xpChartContainer" style="width:600px; height:300px;"></div>
         <div id="skillsChartContainer" style="width:600px; height:300px;"></div>
         <button id="signOutBtn" class="signOutBtn" onclick="logoutUser()">Logout</button>
