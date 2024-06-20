@@ -45,6 +45,14 @@ async function authentificateUser() {
 
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
+
+        console.log("Skill Levels:");
+    const skillLevels = createSkills(skill); // Utilisez createSkills avec les données de compétence
+    console.log(skillLevels);
+    Object.entries(skillLevels).forEach(([skillType, level]) => {
+      console.log(`${skillType}: ${level}`);
+    });
+
     } catch (error) {
         loginError.textContent = `login failed: ${error.message}`;
         console.log('login error:', error)
