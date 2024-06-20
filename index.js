@@ -183,11 +183,22 @@ function renderXPChart(transactions) {
     const data = filteredTransactions.filter(filteredTransaction => {
         return filteredTransaction.type === "xp";
     });
+
+    if (data.length === 0) {
+        console.error("No valid transactions found for rendering XP chart.");
+        return;
+    }
+
     const sortedData = data.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const svgContainer = document.getElementById('xpChartContainer');
     const height = parseInt(svgContainer.style.height);
     const width = parseInt(svgContainer.style.width);
+
+    if (isNaN(height) || isNaN(width)) {
+        console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
+        return;
+    }
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '100%');
@@ -216,6 +227,12 @@ function renderXPChart(transactions) {
         }
         return `${x},${y}`;
     });
+
+    if (points.some(point => point.includes('NaN'))) {
+        console.error("Detected NaN in polyline points. Aborting polyline creation.");
+        return;
+    }
+
     line.setAttribute('points', points.join(' '));
     line.setAttribute('fill', 'none');
     line.setAttribute('stroke', '#4267B2');
@@ -259,6 +276,7 @@ function renderXPChart(transactions) {
 }
 
 
+
 function formatDate(date) {
     const options = { month: 'short', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
@@ -272,19 +290,40 @@ function formatDate(date) {
     const height = parseInt(svglvlContainer.style.height);
     const width = parseInt(svglvlContainer.style.width);
 
+    if (isNaN(height) || isNaN(width)) {
+        console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
+        return;
+    }
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
-    const barWidth = width / Object.keys(skillLevels).length;
+
+    const numSkills = Object.keys(skillLevels).length;
+    const barWidth = width / numSkills;
+    
+    if (isNaN(barWidth) || barWidth <= 0) {
+        console.error(`Invalid bar width calculated: barWidth=${barWidth}`);
+        return;
+    }
+
     let index = 0;
     for (const [skillType, level] of Object.entries(skillLevels)) {
-        console.log(level.type, level.amount);
-        const barHeight = (level.amount / 100) * height;
+        const skillAmount = level.amount;
+        if (isNaN(skillAmount)) {
+            console.error(`Invalid skill amount for ${skillType}: amount=${skillAmount}`);
+            continue;
+        }
+
+        const barHeight = (skillAmount / 100) * height;
         const xPosition = index * barWidth;
         const yPosition = height - barHeight;
-        if (isNaN(xPosition) || isNaN(yPosition) || isNaN(barHeight) || isNaN(barWidth)) {
+
+        if (isNaN(xPosition) || isNaN(yPosition) || isNaN(barHeight)) {
             console.error(`NaN detected in bar chart: x=${xPosition}, y=${yPosition}, width=${barWidth}, height=${barHeight}`);
+            continue;
         }
+
         const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bar.setAttribute('x', xPosition);
         bar.setAttribute('y', yPosition);
@@ -298,7 +337,7 @@ function formatDate(date) {
         label.setAttribute('y', height - 5);
         label.setAttribute('fill', '#333');
         label.setAttribute('text-anchor', 'middle');
-        label.textContent = level.type.substring(level.type.indexOf('_') + 1);
+        label.textContent = skillType.substring(skillType.indexOf('_') + 1);
         label.style.writingMode = 'vertical-lr';
         label.style.fontSize = '14px';
         svg.appendChild(label);
@@ -318,9 +357,10 @@ function formatDate(date) {
         yAxisLabel.setAttribute('x', '5');
         yAxisLabel.setAttribute('y', height - (i / 10) * height - 5);
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(100 * i / 10); // Adjusted here
+        yAxisLabel.textContent = Math.round(100 * i / 10);
         svg.appendChild(yAxisLabel);
     }
+
     svglvlContainer.appendChild(svg);
 }
 
