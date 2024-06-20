@@ -374,7 +374,7 @@ function renderXPChart(transactions) {
     const svgHeight = 500;
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
-    svgContainer.innerHTML = '';  // Clear any existing content
+    /* svgContainer.innerHTML = '';  // Clear any existing content */
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
