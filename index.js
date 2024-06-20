@@ -10,7 +10,7 @@ const signOutBtn = document.getElementById("signOutBtn");
 
 let jwtToken = null;
 
-async function authentificateUser() {
+async function authenticateUser() {
     const usernameOrEmail = userInput.value;
     const password = passInput.value;
     const base64Credentials = btoa(`${usernameOrEmail}:${password}`);
@@ -23,10 +23,11 @@ async function authentificateUser() {
                 'Authorization': `Basic ${base64Credentials}`
             }
         });
-        
+
         if (!response.ok) {
             throw new Error('Invalid credentials');
         }
+
         const data = await response.json();
         jwtToken = data.token;
 
@@ -34,8 +35,8 @@ async function authentificateUser() {
         const xpData = await fetchXPData(jwtToken);
         const skillData = await fetchSkillData(jwtToken);
 
-        displayUsername.textContent = user.attrs.firsName;
-        renderXPChart(xpData)
+        displayUsername.textContent = user.attrs.firstName;
+        renderXPChart(xpData);
         renderSkillPieChart(skillData);
 
         loginSection.style.display = 'none';
@@ -55,7 +56,8 @@ async function fetchUserData(token) {
             },
             body: JSON.stringify({
                 query: `
-                    query {
+                query {
+                    user {
                         id
                         attrs
                         transactions {
@@ -88,7 +90,7 @@ async function fetchUserData(token) {
 async function fetchXPData(token) {
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
-            method:'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -127,7 +129,7 @@ async function fetchXPData(token) {
 async function fetchSkillData(token) {
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
-            method:'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -163,14 +165,14 @@ async function fetchSkillData(token) {
 
 function renderXPChart(transactions) {
     const filteredTransactions = transactions.filter(txn => txn.path.includes("/div-01") && !txn.path.includes("piscine-js/"));
-    const xpData = filteredTransactions.filter(txn =>  txn.type === "xp");
+    const xpData = filteredTransactions.filter(txn => txn.type === "xp");
     const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const svgContainer = document.getElementById('xpChartContainer');
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
 
-    const svg =  document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
 
@@ -178,11 +180,11 @@ function renderXPChart(transactions) {
     let totalXP = 0;
     sortedXPData.forEach((entry, index) => {
         totalXP += entry.amount;
-        accumulatedXP.push({ x: index, y: totalXP});
+        accumulatedXP.push({ x: index, y: totalXP });
     });
 
     const maxXP = Math.max(...accumulatedXP.map(d => d.y));
-    const linePoints = accumulatedXP.map(d => `${(d.x/ (sortedXPData.length - 1)) * svgWidth}, ${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
+    const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
 
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     polyline.setAttribute('points', linePoints);
@@ -214,12 +216,12 @@ function renderSkillPieChart(skills) {
         const endAngle = startAngle + sliceAngle;
 
         const x1 = radius * Math.cos(startAngle);
-        const y1 = radius * Math.sin(startAngle)
-        const x2 = radius * Math.cos(startAngle)
-        const y2 = radius * Math.cos(startAngle)
+        const y1 = radius * Math.sin(startAngle);
+        const x2 = radius * Math.cos(endAngle);
+        const y2 = radius * Math.sin(endAngle);
 
-        const largeArcFlag = sliceAngle > Math.PI ? 1 : 0;Ù
-        
+        const largeArcFlag = sliceAngle > Math.PI ? 1 : 0;
+
         const pathData = [
             `M ${x1} ${y1}`,
             `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
@@ -231,7 +233,7 @@ function renderSkillPieChart(skills) {
         path.setAttribute('fill', getRandomColor());
 
         const labelX = (radius / 2) * Math.cos(startAngle + sliceAngle / 2);
-        const labelY = (radius / 2 ) * Math.sin(startAngle + sliceAngle / 2);
+        const labelY = (radius / 2) * Math.sin(startAngle + sliceAngle / 2);
 
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', labelX);
@@ -244,8 +246,8 @@ function renderSkillPieChart(skills) {
         g.appendChild(text);
 
         startAngle += sliceAngle;
-
     });
+
     svg.appendChild(g);
     svgContainer.appendChild(svg);
 }
