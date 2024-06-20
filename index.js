@@ -19,7 +19,7 @@ async function authentificateUser() {
     const base64Credentials = btoa(`${username}:${password}`);
 
     try {
-        console.log("Sending login request", response);
+        console.log("Sending login request" );
         const response = await fetch('https://zone01normandie.org/api/auth/signin', {
             method: 'POST',
             headers: {
