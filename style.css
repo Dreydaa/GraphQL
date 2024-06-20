@@ -100,13 +100,13 @@
     box-shadow: 10px 5px 5px 5px rgb(127, 127, 127);
     background-color: gray;   
     border:solid 1px rgb(79, 79, 79) ;
+    align-items: center;
+    justify-content: center;
+    margin-top: 7.5%;
+    display: flex;
 }
 
 .username {
-    margin-top: 7.5%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
     font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
     font-size: 20px;
     font-style: italic;
