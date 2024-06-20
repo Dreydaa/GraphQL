@@ -96,7 +96,7 @@ async function fetchUserData(token) {
 }
 
 async function fetchXPData(token) {
-    console.log("fetch XP DATA");
+    console.log("fetch xp data", token);
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -136,7 +136,7 @@ async function fetchXPData(token) {
 }
 
 async function fetchSkillData(token) {
-    console.log("fetch SKILL DATA");
+    console.log("fetch SKILL DATA", token);
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
