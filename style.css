@@ -111,11 +111,10 @@
     font-weight: 900;
 }
 
-#xpChartContainer {
+/* #xpChartContainer {
     display: flex; 
     position: absolute;
-    right: 0;
-}
+} */
 #skillsChartContainer {
     position: absolute;
     left: 0;

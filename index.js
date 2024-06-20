@@ -460,7 +460,7 @@ function renderSkillChart(skillLevels) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = 400;
+    const svgWidth = 1980;
     const svgHeight = 600;
     const padding = 40;  // Padding for the axis labels and ticks
 
@@ -544,7 +544,7 @@ function renderSkillChart(skillLevels) {
 }
 
 // Example usage
-const skillLevels = {
+/* const skillLevels = {
     skill_A: { amount: 30 },
     skill_B: { amount: 40 },
     skill_C: { amount: 50 },
@@ -552,7 +552,7 @@ const skillLevels = {
     skill_E: { amount: 10 }
 };
 
-renderSkillChart(skillLevels);
+renderSkillChart(skillLevels); */
 
 
 const skills = [
