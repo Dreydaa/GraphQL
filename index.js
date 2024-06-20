@@ -179,14 +179,14 @@ function renderXPChart(transactions) {
     const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const svgWidth = svgContainer.clientWidth;
-    const svgHeight = svgContainer.clientHeight;
+    const svgWidth = parseInt(svgContainer.style.height);
+    const svgHeight = parseInt(svgContainer.style.width);
 
     svgContainer.innerHTML = '';
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', svgWidth);
-    svg.setAttribute('height', svgHeight);
+    svg.setAttribute('width', '600px');
+    svg.setAttribute('height', '300px');
 
     const accumulatedXP = [];
     let totalXP = 0;
@@ -199,13 +199,46 @@ function renderXPChart(transactions) {
     const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
 
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    polyline.setAttribute('points', linePoints);
+    polyline.setAttribute('points', linePoints.join(' '));
     polyline.setAttribute('fill', 'none');
     polyline.setAttribute('stroke', '#4267B2');
     polyline.setAttribute('stroke-width', 2);
 
-    svg.appendChild(polyline);
+    for (let i = 0; i <= 10; i++) {
+        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxisTick.setAttribute('x1', '0');
+        yAxisTick.setAttribute('x2', width);
+        yAxisTick.setAttribute('y1', (i / 10) * height);
+        yAxisTick.setAttribute('y2', (i / 10) * height);
+        yAxisTick.setAttribute('stroke', '#ccc');
+        svg.appendChild(yAxisTick);
+        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yAxisLabel.setAttribute('x', '5');
+        yAxisLabel.setAttribute('y', (i / 10) * height - 5);
+        yAxisLabel.setAttribute('fill', '#333');
+        yAxisLabel.textContent = Math.round(yAxisStep * (10 - i) / 10);
+        svg.appendChild(yAxisLabel);
+    }
+
+    for (let i = 0; i <= monthsDifference; i++) {
+        const dateForTick = new Date(startDate.getTime() + (i / monthsDifference) * monthsDifference * dateStep);
+        const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        xAxisTick.setAttribute('x1', (i / monthsDifference) * width);
+        xAxisTick.setAttribute('x2', (i / monthsDifference) * width);
+        xAxisTick.setAttribute('y1', '0');
+        xAxisTick.setAttribute('y2', height);
+        xAxisTick.setAttribute('stroke', '#ccc');
+        svg.appendChild(xAxisTick);
+        const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xAxisLabel.setAttribute('x', (i / monthsDifference) * width);
+        xAxisLabel.setAttribute('y', height - 5);
+        xAxisLabel.setAttribute('fill', '#333');
+        xAxisLabel.textContent = formatDate(dateForTick);
+        svg.appendChild(xAxisLabel);
+    }
+
     svgContainer.appendChild(svg);
+    return accumulatedXP;
 }
 
 function renderSkillPieChart(skills) {
@@ -215,7 +248,7 @@ function renderSkillPieChart(skills) {
     const svgHeight = svgContainer.clientHeight;
     const radius = Math.min(svgWidth, svgHeight) / 2;
 
-    svgContainer.innerHTML = '';
+    svgContainer.innerHTML = '';    
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
