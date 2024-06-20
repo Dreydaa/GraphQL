@@ -460,8 +460,8 @@ function renderSkillChart(skillLevels) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const width = 600;
-    const height = 400;
+    const width = 100;
+    const height = 600;
 
     if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
         console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
