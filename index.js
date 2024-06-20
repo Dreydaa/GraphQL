@@ -460,7 +460,7 @@ function renderSkillChart(skillLevels) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const width = 100;
+    const width = 1000;
     const height = 600;
 
     if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
