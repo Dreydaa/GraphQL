@@ -467,9 +467,9 @@ function createSkills(skilldts) {
         }
       }
     });
+    console.log(skilldata);
     return skilldata;
 }
-console.log(skilldata);
 
 function renderSkillChart(skillData) {
     console.log(skillData);
