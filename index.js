@@ -464,8 +464,8 @@ function renderXPChart(transactions) {
 function renderSkillBarChart(skills) {
     console.log("Rendering skill bar chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth || 600;  // Default width if not set
-    const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight || 300;  // Default height if not set
+    const svgWidth = 600;  // Default width if not set
+    const svgHeight = 300;  // Default height if not set
     const padding = 40;  // Padding for the chart
 
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
