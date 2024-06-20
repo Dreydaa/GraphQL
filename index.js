@@ -461,16 +461,22 @@ function renderXPChart(transactions) {
     }
 }
 
-function renderSkillPieChart(skills) {
-    console.log("Rendering skill pie chart with skills:", skills);
+function renderSkillDoughnutChart(skills) {
+    console.log("Rendering skill doughnut chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = 800;
-    const svgHeight = 800;
+    const svgWidth = 100;
+    const svgHeight = 100;
     const radius = Math.min(svgWidth, svgHeight) / 2;
+    const innerRadius = radius / 2; // Inner radius for the doughnut hole
 
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
     svgContainer.innerHTML = '';  // Clear any existing content
+
+    if (svgWidth === 0 || svgHeight === 0) {
+        console.error("SVG container dimensions are zero. Ensure the container has proper width and height.");
+        return;
+    }
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
@@ -502,7 +508,9 @@ function renderSkillPieChart(skills) {
         const pathData = [
             `M ${x1} ${y1}`,
             `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-            `L 0 0`
+            `L ${(innerRadius * Math.cos(endAngle)).toFixed(2)} ${(innerRadius * Math.sin(endAngle)).toFixed(2)}`,
+            `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${(innerRadius * Math.cos(startAngle)).toFixed(2)} ${(innerRadius * Math.sin(startAngle)).toFixed(2)}`,
+            `L ${x1} ${y1}`
         ].join(' ');
 
         console.log("Path data for slice:", pathData);
@@ -511,21 +519,18 @@ function renderSkillPieChart(skills) {
         path.setAttribute('d', pathData);
         path.setAttribute('fill', getRandomColor());
 
-        const labelX = (radius / 2 * Math.cos(startAngle + sliceAngle / 2)).toFixed(2);
-        const labelY = (radius / 2 * Math.sin(startAngle + sliceAngle / 2)).toFixed(2);
-
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', labelX);
-        text.setAttribute('y', labelY);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('fill', '#fff');
-        text.textContent = skill.type.split('_')[1];
-
         g.appendChild(path);
-        g.appendChild(text);
 
         startAngle += sliceAngle;
     });
+
+    // Add a white circle in the middle to create the doughnut hole
+    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    innerCircle.setAttribute('cx', 0);
+    innerCircle.setAttribute('cy', 0);
+    innerCircle.setAttribute('r', innerRadius);
+    innerCircle.setAttribute('fill', '#fff');
+    g.appendChild(innerCircle);
 
     svg.appendChild(g);
     svgContainer.appendChild(svg);
@@ -539,6 +544,7 @@ function getRandomColor() {
     }
     return color;
 }
+
 
 
 

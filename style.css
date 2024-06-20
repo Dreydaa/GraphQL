@@ -113,18 +113,18 @@
     font-weight: 900;
 }
 
-#xpChartContainer {
-    /* display: flex; */
+/* #xpChartContainer {
+     display: flex; 
     width: 600px;
     height: 300px;
-    /* background-color: darkred; */
-    border: solid 1px white;
+     background-color: darkred; 
+    border: solid 1px white; 
 }
 
 #skillsChartContainer {
-/*     display: flex; */
+     display: flex; 
     width: 600px;
     height: 300px;
-    /* background-color: darkred; */
-    border: solid 1px blue;
-}
+     background-color: darkred; 
+     border: solid 1px blue; 
+} */
