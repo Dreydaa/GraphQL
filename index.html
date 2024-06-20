@@ -10,39 +10,33 @@
 </head>
 
 <body>
-    <div class="form-container">
-        <p class="title">Login</p>
-
-        <form id="loginForm" class="form">
+    <div class="loginSection" id="loginSection">
+        <div class="title">Login</div>
+        <div class="form">
             <p>Username/Email</p>
             <div class="input-group">
-                <label for="loginIdentifier"></label>
-                <input type="text" name="loginIdentifier" id="userInput" placeholder="">
+                <input type="text" id="userInput" placeholder="">
+                <label for="userInput"></label>
             </div>
             <p>Password</p>
             <div class="input-group">
-                <label for="password"></label>
-                <input type="password" name="password" id="passInput" class="password" placeholder="">
+                <input type="password" id="passInput" placeholder="">
+                <label for="passInput"></label>
             </div>
-            
             <div class="button-container">
-                <button onclick="authentificateUser()" class="signInBtn">Sign in</button>
-                <p id="loginError"></p>
+            <button class="signInBtn" id="signInBtn" onclick="authenticateUser()">Login</button>
+            <p id="loginError"></p>
             </div>
+        </div>
     </div>
-    </form>
-
-
-    <div  id="profileSection" style="display: none;">
-    <p>Welcome, <span id="displayUsername"></span></p>
-    <div id="userData"></div>
-    <div id="xpChartContainer" style="width: 600px; height: 300px;"></div>
-    <div id="skillsChartContainer" style="width: 600px; height: 300px;"></div>
-    <button id="signOutBtn" class="signOutBtn" onclick="logoutUser()">Sign out</button>
+    <div id="profileSection" style="display:none;">
+        <p>Welcome, <span id="displayUsername"></span></p>
+        <div id="userData"></div>
+        <div id="xpChartContainer" style="width:600px; height:300px;"></div>
+        <div id="skillsChartContainer" style="width:600px; height:300px;"></div>
+        <button id="signOutBtn" class="signOutBtn" onclick="logoutUser()">Logout</button>
     </div>
-
     <script src="index.js"></script>
-
 </body>
 
 </html>
