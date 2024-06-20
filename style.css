@@ -113,7 +113,7 @@
     font-weight: 900;
 }
 
-.xpChartContainer {
+#xpChartContainer {
     /* display: flex; */
     width: 600px;
     height: 300px;
@@ -121,7 +121,7 @@
     border: solid 1px white;
 }
 
-.skillsChartContainer {
+#skillsChartContainer {
 /*     display: flex; */
     width: 600px;
     height: 300px;
