@@ -13,13 +13,13 @@ const signOutBtn = document.getElementById("signOutBtn");
 let jwtToken = null;
 
 async function authentificateUser() {
-    console.log("authUser");
+    /* console.log("authUser"); */
     const username = userInput.value;
     const password = passInput.value;
     const base64Credentials = btoa(`${username}:${password}`);
 
     try {
-        console.log("Sending login request" );
+        /* console.log("Sending login request" ); */
         const response = await fetch('https://zone01normandie.org/api/auth/signin', {
             method: 'POST',
             headers: {
@@ -52,7 +52,7 @@ async function authentificateUser() {
 }
 
 async function fetchUserData(token) {
-    console.log("fetch USER data with token:", token);
+   /*  console.log("fetch USER data with token:", token); */
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -95,7 +95,7 @@ async function fetchUserData(token) {
 }
 
 async function fetchXPData(token) {
-    console.log("fetch xp data", token);
+   /*  console.log("fetch xp data", token); */
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -135,7 +135,7 @@ async function fetchXPData(token) {
 }
 
 async function fetchSkillData(token) {
-    console.log("fetch SKILL DATA", token);
+    /* console.log("fetch SKILL DATA", token); */
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -184,8 +184,10 @@ function formatDate(date) {
     console.log("Filtered and sorted XP data:", sortedXPData);
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const svgWidth = svgContainer.clientWidth;
-    const svgHeight = svgContainer.clientHeight;
+    const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth;
+    const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight;
+
+    console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
     svgContainer.innerHTML = '';  // Clear any existing content
 
@@ -236,6 +238,8 @@ function formatDate(date) {
     const endDate = new Date(sortedXPData[sortedXPData.length - 1].createdAt);
     const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() + 1;
 
+    console.log(`Date range: start=${startDate}, end=${endDate}, monthsDifference=${monthsDifference}`);
+
     for (let i = 0; i <= monthsDifference; i++) {
         const dateForTick = new Date(startDate.getTime() + (i / monthsDifference) * monthsDifference * dateStep);
 
@@ -255,7 +259,7 @@ function formatDate(date) {
         svg.appendChild(xAxisLabel);
     }
 
-    svgContainer.appendChild(svg);
+/*     svgContainer.appendChild(svg); */
 }
 
 function renderSkillPieChart(skills) {
@@ -264,6 +268,9 @@ function renderSkillPieChart(skills) {
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
     const radius = Math.min(svgWidth, svgHeight) / 2;
+
+    console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
+
 
     svgContainer.innerHTML = '';  // Clear any existing content
 
@@ -293,6 +300,9 @@ function renderSkillPieChart(skills) {
             `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
             `L 0 0`
         ].join(' ');
+
+        console.log("Path data for slice:", pathData);
+
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', pathData);
