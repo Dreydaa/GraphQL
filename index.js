@@ -172,6 +172,11 @@ async function fetchSkillData(token) {
     }
 }
 
+function formatDate(date) {
+    const options = { month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
 function renderXPChart(transactions) {
     console.log("RENDER XPXHART");
     const filteredTransactions = transactions.filter(txn => txn.path.includes("/div-01") && !txn.path.includes("piscine-js/"));
