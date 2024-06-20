@@ -184,8 +184,8 @@ function renderXPChart(transactions) {
     const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const svgWidth = parseInt(svgContainer.style.height);
-    const svgHeight = parseInt(svgContainer.style.width);
+    const svgWidth = svgContainer.clientWidth;
+    const svgHeight = svgContainer.clientHeight;
 
     svgContainer.innerHTML = '';
 
@@ -202,10 +202,10 @@ function renderXPChart(transactions) {
 
     /* const maxXP = Math.max(...accumulatedXP.map(d => d.y)); */
     const maxXP = Math.ceil(Math.max(accumulatedXP));
-    const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`);
+    const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
 
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    polyline.setAttribute('points', linePoints.join(' '));
+    polyline.setAttribute('points', linePoints);
     polyline.setAttribute('fill', 'none');
     polyline.setAttribute('stroke', '#4267B2');
     polyline.setAttribute('stroke-width', 2);
