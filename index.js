@@ -14,8 +14,8 @@ let jwtToken = null;
 
 async function authentificateUser() {
     console.log("rpes");
-    const username = document.getElementById('userInput').value;
-    const password = document.getElementById('password').value;
+    const username = userInput.value;
+    const password = passInput.value;
     const base64Credentials = btoa(`${username}:${password}`);
 
     try {
