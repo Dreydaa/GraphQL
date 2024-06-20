@@ -192,10 +192,11 @@ function renderXPChart(transactions) {
     const sortedData = data.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const svgContainer = document.getElementById('xpChartContainer');
-    const height = parseInt(svgContainer.style.height);
-    const width = parseInt(svgContainer.style.width);
+    const rect = svgContainer.getBoundingClientRect();
+    const width = rect.width || svgContainer.offsetWidth;
+    const height = rect.height || svgContainer.offsetHeight;
 
-    if (isNaN(height) || isNaN(width)) {
+    if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
         console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
         return;
     }
@@ -277,6 +278,7 @@ function renderXPChart(transactions) {
 
 
 
+
 function formatDate(date) {
     const options = { month: 'short', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
@@ -287,10 +289,11 @@ function formatDate(date) {
     console.log(skillLevels);
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
-    const height = parseInt(svglvlContainer.style.height);
-    const width = parseInt(svglvlContainer.style.width);
+    const rect = svglvlContainer.getBoundingClientRect();
+    const width = rect.width || svglvlContainer.offsetWidth;
+    const height = rect.height || svglvlContainer.offsetHeight;
 
-    if (isNaN(height) || isNaN(width)) {
+    if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
         console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
         return;
     }
@@ -301,7 +304,7 @@ function formatDate(date) {
 
     const numSkills = Object.keys(skillLevels).length;
     const barWidth = width / numSkills;
-    
+
     if (isNaN(barWidth) || barWidth <= 0) {
         console.error(`Invalid bar width calculated: barWidth=${barWidth}`);
         return;
@@ -363,6 +366,7 @@ function formatDate(date) {
 
     svglvlContainer.appendChild(svg);
 }
+
 
 
 
