@@ -205,34 +205,36 @@ function renderXPChart(transactions) {
     polyline.setAttribute('stroke', '#4267B2');
     polyline.setAttribute('stroke-width', 2);
 
+    const dateStep = 30 * 24 * 60 * 60 * 1000;
+
     for (let i = 0; i <= 10; i++) {
         const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         yAxisTick.setAttribute('x1', '0');
-        yAxisTick.setAttribute('x2', width);
-        yAxisTick.setAttribute('y1', (i / 10) * height);
-        yAxisTick.setAttribute('y2', (i / 10) * height);
+        yAxisTick.setAttribute('x2', svgWidth);
+        yAxisTick.setAttribute('y1', (i / 10) * svgHeight);
+        yAxisTick.setAttribute('y2', (i / 10) * svgHeight);
         yAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(yAxisTick);
         const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         yAxisLabel.setAttribute('x', '5');
-        yAxisLabel.setAttribute('y', (i / 10) * height - 5);
+        yAxisLabel.setAttribute('y', (i / 10) * svgHeight - 5);
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(yAxisStep * (10 - i) / 10);
+        yAxisLabel.textContent = Math.round(maxXP * (10 - i) / 10);
         svg.appendChild(yAxisLabel);
     }
 
     for (let i = 0; i <= monthsDifference; i++) {
         const dateForTick = new Date(startDate.getTime() + (i / monthsDifference) * monthsDifference * dateStep);
         const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        xAxisTick.setAttribute('x1', (i / monthsDifference) * width);
-        xAxisTick.setAttribute('x2', (i / monthsDifference) * width);
+        xAxisTick.setAttribute('x1', (i / monthsDifference) * svgWidth);
+        xAxisTick.setAttribute('x2', (i / monthsDifference) * svgWidth);
         xAxisTick.setAttribute('y1', '0');
-        xAxisTick.setAttribute('y2', height);
+        xAxisTick.setAttribute('y2', svgHeight);
         xAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(xAxisTick);
         const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        xAxisLabel.setAttribute('x', (i / monthsDifference) * width);
-        xAxisLabel.setAttribute('y', height - 5);
+        xAxisLabel.setAttribute('x', (i / monthsDifference) * svgWidth);
+        xAxisLabel.setAttribute('y', svgHeight - 5);
         xAxisLabel.setAttribute('fill', '#333');
         xAxisLabel.textContent = formatDate(dateForTick);
         svg.appendChild(xAxisLabel);
