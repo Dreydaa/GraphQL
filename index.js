@@ -42,7 +42,8 @@ async function authenticateUser() {
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
     } catch (error) {
-        loginError.textContent = error.message;
+        loginError.textContent = `login failed: ${error.message}`;
+        console.error('login error:', error)
     }
 }
 
