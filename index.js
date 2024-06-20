@@ -182,6 +182,8 @@ function renderXPChart(transactions) {
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
 
+    svgContainer.innerHTML = '';
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
@@ -212,6 +214,8 @@ function renderSkillPieChart(skills) {
     const svgWidth = svgContainer.clientWidth;
     const svgHeight = svgContainer.clientHeight;
     const radius = Math.min(svgWidth, svgHeight) / 2;
+
+    svgContainer.innerHTML = '';
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
