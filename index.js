@@ -206,6 +206,9 @@ function renderXPChart(transactions) {
     polyline.setAttribute('stroke-width', 2);
 
     const dateStep = 30 * 24 * 60 * 60 * 1000;
+    const startDate = new Date(sortedXPData[0].createdAt);
+    const endDate = new Date(sortedXPData[sortedXPData.length - 1].createdAt);
+    const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() +1;
 
     for (let i = 0; i <= 10; i++) {
         const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
