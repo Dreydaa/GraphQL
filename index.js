@@ -174,194 +174,160 @@ async function fetchSkillData(token) {
 
 
 function renderXPChart(transactions) {
-    console.log("Rendering XP chart with transactions:", transactions);
+    console.log(transactions)
+    const filteredTransactions = transactions.filter(transaction => {
+        return transaction.path.includes("/div-01") && !transaction.path.includes("piscine-js/");
+    });
+    const data = filteredTransactions.filter(filteredTransaction => {
+        return filteredTransaction.type === "xp";
+    });
+    const sortedData = data.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    // Create the SVG container
 
-    const filteredTransactions = transactions.filter(txn => txn.path.includes("/div-01") && !txn.path.includes("piscine-js/"));
-    const xpData = filteredTransactions.filter(txn => txn.type === "xp");
-    const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-    console.log("Filtered and sorted XP data:", sortedXPData);
+    const svgContainer = document.getElementById('svgxpcontainer');
+    const height = parseInt(svgContainer.style.height);
+    const width = parseInt(svgContainer.style.width);
 
-    const svgContainer = document.getElementById('xpChartContainer');
-    const svgWidth = parseInt(svgContainer.style.width);
-    const svgHeight = parseInt(svgContainer.style.height);
-    console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
-    svgContainer.innerHTML = '';  // Clear any existing content
-
-    if (svgWidth === 0 || svgHeight === 0) {
-        console.error("SVG container dimensions are zero. Ensure the container has proper width and height.");
-        return;
-    }
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
-    svgContainer.appendChild(svg);
 
-    const accumulatedXP = [];
-    let totalXP = 0;
-    sortedXPData.forEach((entry, index) => {
-        totalXP += entry.amount;
-        accumulatedXP.push({ x: index, y: totalXP });
+    
+
+
+    // Create the line
+    const accumulatedValues = [];
+    let accumulatedTotal = 0;
+    sortedData.forEach((entry, index) => {
+        accumulatedTotal += entry.amount;
+        accumulatedValues.push({ x: index, y: accumulatedTotal });
     });
-    console.log("Accumulated XP data:", accumulatedXP);
 
-    const maxXP = Math.max(...accumulatedXP.map(d => d.y));
-    if (maxXP === 0) {
-        console.error("Max XP is 0, cannot render chart.");
-        return;
-    }
 
-    const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
-    console.log("Line points for XP chart:", linePoints);
+    // Calculate Y-axis step size
+    const yAxisStep = Math.ceil(Math.max(accumulatedTotal));
 
-    if (linePoints.trim() === '') {
-        console.error("Line points are empty, cannot render chart.");
-        return;
-    }
-
-    const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    polyline.setAttribute('points', linePoints);
-    polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', '#4267B2');
-    polyline.setAttribute('stroke-width', 2);
-    svg.appendChild(polyline);
-
+    // Calculate X-axis step size (assuming 30 days per month)
+    const dateStep = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    // Calculate the number of months between the start and end date
+    const startDate = new Date(sortedData[0].createdAt);
+    const endDate = new Date(sortedData[sortedData.length - 1].createdAt);
+    const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() +1;
+    // Create the line
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    const points = accumulatedValues.map(entry => `${(entry.x / (sortedData.length - 1)) * width},${height - (entry.y / yAxisStep) * height}`);
+    line.setAttribute('points', points.join(' '));	
+    line.setAttribute('fill', 'none');
+    line.setAttribute('stroke', '#4267B2');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
     // Create Y-axis ticks and labels
     for (let i = 0; i <= 10; i++) {
         const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         yAxisTick.setAttribute('x1', '0');
-        yAxisTick.setAttribute('x2', svgWidth);
-        yAxisTick.setAttribute('y1', (i / 10) * svgHeight);
-        yAxisTick.setAttribute('y2', (i / 10) * svgHeight);
+        yAxisTick.setAttribute('x2', width);
+        yAxisTick.setAttribute('y1', (i / 10) * height);
+        yAxisTick.setAttribute('y2', (i / 10) * height);
         yAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(yAxisTick);
-
         const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         yAxisLabel.setAttribute('x', '5');
-        yAxisLabel.setAttribute('y', (i / 10) * svgHeight - 5);
+        yAxisLabel.setAttribute('y', (i / 10) * height - 5);
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(maxXP * (10 - i) / 10);
+        yAxisLabel.textContent = Math.round(yAxisStep * (10 - i) / 10);
         svg.appendChild(yAxisLabel);
     }
-
     // Create X-axis ticks and labels
-    const dateStep = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
-    const startDate = new Date(sortedXPData[0].createdAt);
-    const endDate = new Date(sortedXPData[sortedXPData.length - 1].createdAt);
-    const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() + 1;
-    
-    console.log(`Date range: start=${startDate}, end=${endDate}, monthsDifference=${monthsDifference}`);
-
     for (let i = 0; i <= monthsDifference; i++) {
         const dateForTick = new Date(startDate.getTime() + (i / monthsDifference) * monthsDifference * dateStep);
-
         const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        xAxisTick.setAttribute('x1', (i / monthsDifference) * svgWidth);
-        xAxisTick.setAttribute('x2', (i / monthsDifference) * svgWidth);
+        xAxisTick.setAttribute('x1', (i / monthsDifference) * width);
+        xAxisTick.setAttribute('x2', (i / monthsDifference) * width);
         xAxisTick.setAttribute('y1', '0');
-        xAxisTick.setAttribute('y2', svgHeight);
+        xAxisTick.setAttribute('y2', height);
         xAxisTick.setAttribute('stroke', '#ccc');
         svg.appendChild(xAxisTick);
-
         const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        xAxisLabel.setAttribute('x', (i / monthsDifference) * svgWidth);
-        xAxisLabel.setAttribute('y', svgHeight - 5);
+        xAxisLabel.setAttribute('x', (i / monthsDifference) * width);
+        xAxisLabel.setAttribute('y', height - 5);
         xAxisLabel.setAttribute('fill', '#333');
         xAxisLabel.textContent = formatDate(dateForTick);
         svg.appendChild(xAxisLabel);
     }
+    svgContainer.appendChild(svg);
+    return accumulatedTotal;
 }
 
 function formatDate(date) {
     const options = { month: 'short', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
-}
+  }
 
-function renderSkillPieChart(skills) {
-    console.log("Rendering skill pie chart with skills:", skills);
-    const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = parseInt(svgContainer.style.width);
-    const svgHeight = parseInt(svgContainer.style.height);
-    const radius = Math.min(svgWidth, svgHeight) / 2;
 
-    console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
+function renderSkillPieChart(skillLevels) {
 
-    svgContainer.innerHTML = '';  // Clear any existing content
+    console.log(skillLevels)
 
-    if (svgWidth === 0 || svgHeight === 0) {
-        console.error("SVG container dimensions are zero. Ensure the container has proper width and height.");
-        return;
-    }
+    const svglvlContainer = document.getElementById('svglvlcontainer');
+    const height = parseInt(svglvlContainer.style.height);
+    const width = parseInt(svglvlContainer.style.width);
+
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', svgWidth);
-    svg.setAttribute('height', svgHeight);
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('transform', `translate(${svgWidth / 2},${svgHeight / 2})`);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    const barWidth = width / Object.keys(skillLevels).length;
+    let index = 0;
+    for (const [skillType, level] of Object.entries(skillLevels)) {
+      const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      console.log(level.type, level.amount)
+      const barHeight = (level.amount / 100) * height;
+      const xPosition = index * barWidth;
+      const yPosition = height - barHeight;
+      bar.setAttribute('x', xPosition);
+      bar.setAttribute('y', yPosition);
+      bar.setAttribute('width', barWidth);
+      bar.setAttribute('height', barHeight);
+      bar.setAttribute('fill', '#4267B2');
+      svg.appendChild(bar);
+      // Display skill type labels
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', xPosition + barWidth / 2);
+      label.setAttribute('y', height - 5);
+      label.setAttribute('fill', '#333');
+      label.setAttribute('text-anchor', 'middle');
+      label.textContent = level.type.substring(level.type.indexOf('_') + 1);
 
-    const totalAmount = skills.reduce((acc, skill) => acc + skill.amount, 0);
-    console.log("Total skill amount:", totalAmount);
+      label.style.writingMode = 'vertical-lr';
 
-    if (totalAmount === 0) {
-        console.error("Total skill amount is 0, cannot render chart.");
-        return;
+
+      label.style.fontSize = '14px';
+
+
+      svg.appendChild(label);
+      index++;
     }
 
-    let startAngle = 0;
-
-    skills.forEach(skill => {
-        const sliceAngle = (skill.amount / totalAmount) * 2 * Math.PI;
-        const endAngle = startAngle + sliceAngle;
-
-        const x1 = (radius * Math.cos(startAngle)).toFixed(2);
-        const y1 = (radius * Math.sin(startAngle)).toFixed(2);
-        const x2 = (radius * Math.cos(endAngle)).toFixed(2);
-        const y2 = (radius * Math.sin(endAngle)).toFixed(2);
-
-        const largeArcFlag = sliceAngle > Math.PI ? 1 : 0;
-
-        const pathData = [
-            `M ${x1} ${y1}`,
-            `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-            `L 0 0`
-        ].join(' ');
-
-        console.log("Path data for slice:", pathData);
-
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', pathData);
-        path.setAttribute('fill', getRandomColor());
-
-        const labelX = (radius / 2 * Math.cos(startAngle + sliceAngle / 2)).toFixed(2);
-        const labelY = (radius / 2 * Math.sin(startAngle + sliceAngle / 2)).toFixed(2);
-
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', labelX);
-        text.setAttribute('y', labelY);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('fill', '#fff');
-        text.textContent = skill.type.split('_')[1];
-
-        g.appendChild(path);
-        g.appendChild(text);
-
-        startAngle += sliceAngle;
-    });
-
-    svg.appendChild(g);
-    svgContainer.appendChild(svg);
+    for (let i = 0; i <= 11; i++) {
+        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxisTick.setAttribute('x1', '0');
+        yAxisTick.setAttribute('x2', width);
+        yAxisTick.setAttribute('y1', (i / 10) * height);
+        yAxisTick.setAttribute('y2', (i / 10) * height);
+        yAxisTick.setAttribute('stroke', '#ccc');
+        svg.appendChild(yAxisTick);
+      
+        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yAxisLabel.setAttribute('x', '5');
+        yAxisLabel.setAttribute('y', height - (i / 10) * height - 5);
+        yAxisLabel.setAttribute('fill', '#333');
+        yAxisLabel.textContent = Math.round(100 * i / 10); // Adjusted here
+        svg.appendChild(yAxisLabel);
+      }
+      svglvlContainer.appendChild(svg);
 }
-
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
 
 
 function logoutUser() {
