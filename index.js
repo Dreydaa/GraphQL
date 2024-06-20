@@ -172,12 +172,10 @@ async function fetchSkillData(token) {
     }
 }
 
-function formatDate(date) {
-    const options = { month: 'short', year: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-}
-  function renderXPChart(transactions) {
+
+function renderXPChart(transactions) {
     console.log("Rendering XP chart with transactions:", transactions);
+
     const filteredTransactions = transactions.filter(txn => txn.path.includes("/div-01") && !txn.path.includes("piscine-js/"));
     const xpData = filteredTransactions.filter(txn => txn.type === "xp");
     const sortedXPData = xpData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -186,7 +184,6 @@ function formatDate(date) {
     const svgContainer = document.getElementById('xpChartContainer');
     const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth;
     const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight;
-
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
     svgContainer.innerHTML = '';  // Clear any existing content
@@ -194,6 +191,7 @@ function formatDate(date) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
+    svgContainer.appendChild(svg);
 
     const accumulatedXP = [];
     let totalXP = 0;
@@ -204,8 +202,18 @@ function formatDate(date) {
     console.log("Accumulated XP data:", accumulatedXP);
 
     const maxXP = Math.max(...accumulatedXP.map(d => d.y));
+    if (maxXP === 0) {
+        console.error("Max XP is 0, cannot render chart.");
+        return;
+    }
+
     const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
     console.log("Line points for XP chart:", linePoints);
+
+    if (linePoints.trim() === '') {
+        console.error("Line points are empty, cannot render chart.");
+        return;
+    }
 
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     polyline.setAttribute('points', linePoints);
@@ -237,7 +245,7 @@ function formatDate(date) {
     const startDate = new Date(sortedXPData[0].createdAt);
     const endDate = new Date(sortedXPData[sortedXPData.length - 1].createdAt);
     const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() + 1;
-
+    
     console.log(`Date range: start=${startDate}, end=${endDate}, monthsDifference=${monthsDifference}`);
 
     for (let i = 0; i <= monthsDifference; i++) {
@@ -258,19 +266,22 @@ function formatDate(date) {
         xAxisLabel.textContent = formatDate(dateForTick);
         svg.appendChild(xAxisLabel);
     }
-
-/*     svgContainer.appendChild(svg); */
 }
+
+function formatDate(date) {
+    const options = { month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 
 function renderSkillPieChart(skills) {
     console.log("Rendering skill pie chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = svgContainer.clientWidth;
-    const svgHeight = svgContainer.clientHeight;
+    const svgWidth = svgContainer.clientWidth || svgContainer.offsetWidth;
+    const svgHeight = svgContainer.clientHeight || svgContainer.offsetHeight;
     const radius = Math.min(svgWidth, svgHeight) / 2;
 
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
-
 
     svgContainer.innerHTML = '';  // Clear any existing content
 
@@ -282,16 +293,22 @@ function renderSkillPieChart(skills) {
 
     const totalAmount = skills.reduce((acc, skill) => acc + skill.amount, 0);
     console.log("Total skill amount:", totalAmount);
+
+    if (totalAmount === 0) {
+        console.error("Total skill amount is 0, cannot render chart.");
+        return;
+    }
+
     let startAngle = 0;
 
     skills.forEach(skill => {
         const sliceAngle = (skill.amount / totalAmount) * 2 * Math.PI;
         const endAngle = startAngle + sliceAngle;
 
-        const x1 = radius * Math.cos(startAngle);
-        const y1 = radius * Math.sin(startAngle);
-        const x2 = radius * Math.cos(endAngle);
-        const y2 = radius * Math.sin(endAngle);
+        const x1 = (radius * Math.cos(startAngle)).toFixed(2);
+        const y1 = (radius * Math.sin(startAngle)).toFixed(2);
+        const x2 = (radius * Math.cos(endAngle)).toFixed(2);
+        const y2 = (radius * Math.sin(endAngle)).toFixed(2);
 
         const largeArcFlag = sliceAngle > Math.PI ? 1 : 0;
 
@@ -303,13 +320,12 @@ function renderSkillPieChart(skills) {
 
         console.log("Path data for slice:", pathData);
 
-
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', pathData);
         path.setAttribute('fill', getRandomColor());
 
-        const labelX = (radius / 2) * Math.cos(startAngle + sliceAngle / 2);
-        const labelY = (radius / 2) * Math.sin(startAngle + sliceAngle / 2);
+        const labelX = (radius / 2 * Math.cos(startAngle + sliceAngle / 2)).toFixed(2);
+        const labelY = (radius / 2 * Math.sin(startAngle + sliceAngle / 2)).toFixed(2);
 
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', labelX);
@@ -329,7 +345,6 @@ function renderSkillPieChart(skills) {
 }
 
 function getRandomColor() {
-    console.log("get random color");
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
@@ -337,6 +352,7 @@ function getRandomColor() {
     }
     return color;
 }
+
 
 function logoutUser() {
     console.log("logout user");
