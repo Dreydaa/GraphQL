@@ -41,7 +41,7 @@ async function authentificateUser() {
 
         displayUsername.textContent = user.attrs.firstName;
         renderXPChart(xpData);
-        renderSkillBarChart(skillData);
+        renderSkillChart(skillData);
 
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
@@ -279,11 +279,6 @@ function renderXPChart(transactions) {
     return accumulatedTotal;
 }
 
-
-
-
-
-
   function renderSkillPieChart(skillLevels) {
     console.log(skillLevels);
 
@@ -461,84 +456,85 @@ function renderXPChart(transactions) {
     }
 }
 
-function renderSkillBarChart(skills) {
-    console.log("Rendering skill bar chart with skills:", skills);
-    const svgContainer = document.getElementById('skillsChartContainer');
-    const svgWidth = 600;  // Default width if not set
-    const svgHeight = 300;  // Default height if not set
-    const padding = 40;  // Padding for the chart
+function renderSkillChart(skillLevels) {
+    console.log(skillLevels);
 
-    console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
+    const svglvlContainer = document.getElementById('skillsChartContainer');
+    const width = 600;
+    const height = 400;
 
-    svgContainer.innerHTML = '';  // Clear any existing content
-
-    if (svgWidth === 0 || svgHeight === 0) {
-        console.error("SVG container dimensions are zero. Ensure the container has proper width and height.");
+    if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
+        console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
         return;
     }
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', svgWidth);
-    svg.setAttribute('height', svgHeight);
-    svgContainer.appendChild(svg);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
 
-    const totalAmount = skills.reduce((acc, skill) => acc + skill.amount, 0);
-    console.log("Total skill amount:", totalAmount);
+    const numSkills = Object.keys(skillLevels).length;
+    const barWidth = width / numSkills;
 
-    if (totalAmount === 0) {
-        console.error("Total skill amount is 0, cannot render chart.");
+    if (isNaN(barWidth) || barWidth <= 0) {
+        console.error(`Invalid bar width calculated: barWidth=${barWidth}`);
         return;
     }
 
-    const maxAmount = Math.max(...skills.map(skill => skill.amount));
-    const barHeight = (svgHeight - 2 * padding) / skills.length;
+    let index = 0;
+    for (const [skillType, level] of Object.entries(skillLevels)) {
+        const skillAmount = level.amount;
+        if (isNaN(skillAmount)) {
+            console.error(`Invalid skill amount for ${skillType}: amount=${skillAmount}`);
+            continue;
+        }
 
-    skills.forEach((skill, index) => {
-        const barWidth = (skill.amount / maxAmount) * (svgWidth - 2 * padding);
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', padding);
-        rect.setAttribute('y', padding + index * barHeight);
-        rect.setAttribute('width', barWidth);
-        rect.setAttribute('height', barHeight - 10);  // Subtract some value for spacing
-        rect.setAttribute('fill', getRandomColor());
-        svg.appendChild(rect);
+        const barHeight = (skillAmount / 100) * height;
+        const xPosition = index * barWidth;
+        const yPosition = height - barHeight;
 
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', padding - 10);
-        text.setAttribute('y', padding + index * barHeight + (barHeight - 10) / 2);
-        text.setAttribute('text-anchor', 'end');
-        text.setAttribute('alignment-baseline', 'middle');
-        text.textContent = skill.type.split('_')[1];
-        svg.appendChild(text);
-    });
+        if (isNaN(xPosition) || isNaN(yPosition) || isNaN(barHeight)) {
+            console.error(`NaN detected in bar chart: x=${xPosition}, y=${yPosition}, width=${barWidth}, height=${barHeight}`);
+            continue;
+        }
 
-    // Create X-axis ticks and labels
-    for (let i = 0; i <= 10; i++) {
-        const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        xAxisTick.setAttribute('x1', padding + i * (svgWidth - 2 * padding) / 10);
-        xAxisTick.setAttribute('x2', padding + i * (svgWidth - 2 * padding) / 10);
-        xAxisTick.setAttribute('y1', padding);
-        xAxisTick.setAttribute('y2', svgHeight - padding);
-        xAxisTick.setAttribute('stroke', '#ccc');
-        svg.appendChild(xAxisTick);
+        const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bar.setAttribute('x', xPosition);
+        bar.setAttribute('y', yPosition);
+        bar.setAttribute('width', barWidth);
+        bar.setAttribute('height', barHeight);
+        bar.setAttribute('fill', '#4267B2');
+        svg.appendChild(bar);
 
-        const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        xAxisLabel.setAttribute('x', padding + i * (svgWidth - 2 * padding) / 10);
-        xAxisLabel.setAttribute('y', svgHeight - padding + 20);
-        xAxisLabel.setAttribute('text-anchor', 'middle');
-        xAxisLabel.setAttribute('fill', '#333');
-        xAxisLabel.textContent = Math.round(maxAmount * i / 10);
-        svg.appendChild(xAxisLabel);
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', xPosition + barWidth / 2);
+        label.setAttribute('y', height - 5);
+        label.setAttribute('fill', '#333');
+        label.setAttribute('text-anchor', 'middle');
+        label.textContent = skillType.substring(skillType.indexOf('_') + 1);
+        label.style.writingMode = 'vertical-lr';
+        label.style.fontSize = '14px';
+        svg.appendChild(label);
+        index++;
     }
-}
 
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+    for (let i = 0; i <= 11; i++) {
+        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxisTick.setAttribute('x1', '0');
+        yAxisTick.setAttribute('x2', width);
+        yAxisTick.setAttribute('y1', (i / 10) * height);
+        yAxisTick.setAttribute('y2', (i / 10) * height);
+        yAxisTick.setAttribute('stroke', '#ccc');
+        svg.appendChild(yAxisTick);
+
+        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yAxisLabel.setAttribute('x', '5');
+        yAxisLabel.setAttribute('y', height - (i / 10) * height - 5);
+        yAxisLabel.setAttribute('fill', '#333');
+        yAxisLabel.textContent = Math.round(100 * i / 10);
+        svg.appendChild(yAxisLabel);
     }
-    return color;
+
+    svglvlContainer.appendChild(svg);
 }
 
 function logoutUser() {
