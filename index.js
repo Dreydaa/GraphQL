@@ -188,6 +188,11 @@ function renderXPChart(transactions) {
 
     svgContainer.innerHTML = '';  // Clear any existing content
 
+    if (svgWidth === 0 || svgHeight === 0) {
+        console.error("SVG container dimensions are zero. Ensure the container has proper width and height.");
+        return;
+    }
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
@@ -273,7 +278,6 @@ function formatDate(date) {
     return date.toLocaleDateString('en-US', options);
 }
 
-
 function renderSkillPieChart(skills) {
     console.log("Rendering skill pie chart with skills:", skills);
     const svgContainer = document.getElementById('skillsChartContainer');
@@ -284,6 +288,11 @@ function renderSkillPieChart(skills) {
     console.log(`SVG container dimensions: width=${svgWidth}, height=${svgHeight}`);
 
     svgContainer.innerHTML = '';  // Clear any existing content
+
+    if (svgWidth === 0 || svgHeight === 0) {
+        console.error("SVG container dimensions are zero. Ensure the container has proper width and height.");
+        return;
+    }
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', svgWidth);
@@ -352,6 +361,7 @@ function getRandomColor() {
     }
     return color;
 }
+
 
 
 function logoutUser() {
