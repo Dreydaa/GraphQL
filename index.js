@@ -41,7 +41,7 @@ async function authentificateUser() {
 
         displayUsername.textContent = user.attrs.firstName;
         renderXPChart(xpData);
-        renderSkillDoughnutChart(skillData);
+        renderSkillColumnChart(skillData);
 
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
