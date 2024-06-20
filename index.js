@@ -2,10 +2,10 @@ console.log("ici");
 
 const loginSection = document.querySelectorAll(".loginSection");
 const profileSection = document.getElementById("profileSection")[0];
-const userInput = document.getElementById("userInput")[0];
-const passInput = document.getElementById("passInput")[0];
+const userInput = document.getElementById("userInput");
+const passInput = document.getElementById("passInput");
 const signInBtn = document.querySelectorAll(".signInBtn");
-const loginError = document.getElementById("loginError")[0];
+const loginError = document.getElementById("loginError");
 const displayUsername = document.getElementById("displayUsername")[0];
 const userDataContainer = document.getElementById("userData")[0];
 const signOutBtn = document.querySelectorAll("signOutBtn");
