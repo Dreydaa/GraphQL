@@ -195,8 +195,9 @@ function renderXPChart(transactions) {
         accumulatedXP.push({ x: index, y: totalXP });
     });
 
-    const maxXP = Math.max(...accumulatedXP.map(d => d.y));
-    const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
+    /* const maxXP = Math.max(...accumulatedXP.map(d => d.y)); */
+    const maxXP = Math.ceil(Math.max(accumulatedXP));
+    const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`);
 
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     polyline.setAttribute('points', linePoints.join(' '));
