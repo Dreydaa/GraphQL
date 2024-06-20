@@ -1,13 +1,13 @@
 console.log("ici");
 
 const loginSection = document.querySelectorAll(".loginSection");
-const profileSection = document.getElementById("profileSection")[0];
+const profileSection = document.getElementById("profileSection")/* [0] */;
 const userInput = document.getElementById("userInput");
 const passInput = document.getElementById("passInput");
 const signInBtn = document.querySelectorAll(".signInBtn");
 const loginError = document.getElementById("loginError");
-const displayUsername = document.getElementById("displayUsername")[0];
-const userDataContainer = document.getElementById("userData")[0];
+const displayUsername = document.getElementById("displayUsername")/* [0] */;
+const userDataContainer = document.getElementById("userData")/* [0] */;
 const signOutBtn = document.querySelectorAll("signOutBtn");
 
 let jwtToken = null;
@@ -19,6 +19,7 @@ async function authentificateUser() {
     const base64Credentials = btoa(`${username}:${password}`);
 
     try {
+        console.log("Sending login request");
         const response = await fetch('https://zone01normandie.org/api/auth/signin', {
             method: 'POST',
             headers: {
@@ -28,11 +29,12 @@ async function authentificateUser() {
         });
 
         if (!response.ok) {
-            throw new Error('Invalid credentials');
+            throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
         jwtToken = data.token;
+        console.log("login successful:", jwtToken);
 
         const user = await fetchUserData(jwtToken);
         const xpData = await fetchXPData(jwtToken);
@@ -51,7 +53,7 @@ async function authentificateUser() {
 }
 
 async function fetchUserData(token) {
-    console.log("fetch USER DATA");
+    console.log("fetch USER data with token:", token);
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -86,6 +88,7 @@ async function fetchUserData(token) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
 
+        console.log("user data fetch error:", result.data.user[0]);
         return result.data.user[0];
     } catch (error) {
         throw new Error('Failed to fetch user data');
