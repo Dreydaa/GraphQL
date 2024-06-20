@@ -10,7 +10,7 @@ const signOutBtn = document.getElementById("signOutBtn");
 
 let jwtToken = null;
 
-async function authenticateUser() {
+async function authentificateUser() {
     const username = document.getElementById('userInput').value;
     const password = document.getElementById('password').value;
     const base64Credentials = btoa(`${username}:${password}`);
