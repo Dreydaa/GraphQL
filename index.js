@@ -28,7 +28,7 @@ async function authentificateUser() {
             }
         });
 
-        console.log('Login response status:', response.status, response.statusText);s
+        console.log('Login response status:', response.status, response.statusText);
 
         if (!response.ok) {
             throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
