@@ -39,7 +39,12 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        displayUsername.textContent = user.attrs.username;
+        displayUsername.textContent = user.username;
+        document.getElementById('userData').innerHTML = `
+            <p>Username: ${userData.username}</p>
+            <p>Total XP: ${userData.totalXP}</p>
+            <p>Email: ${userData.email}</p>
+        `;
         renderXPChart(xpData);
         renderSkillChart(skillData);
 
@@ -195,6 +200,7 @@ async function displayUserData(token) {
         <p>Total Xp: ${userData.totalXP}</p>
         <p>Email: ${userData.email}</p>
         `;
+        console.log("Username:",username,"TotalXp:", totalXP, "Email:", email);
     } catch (error) {
         console.log('Error displaying user data:', error);
     }
