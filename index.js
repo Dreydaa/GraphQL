@@ -19,7 +19,7 @@ async function authentificateUser() {
     const base64Credentials = btoa(`${username}:${password}`);
 
     try {
-        console.log("Sending login request" );
+        /* console.log("Sending login request" ); */
         const response = await fetch('https://zone01normandie.org/api/auth/signin', {
             method: 'POST',
             headers: {
@@ -27,8 +27,6 @@ async function authentificateUser() {
                 'Authorization': `Basic ${base64Credentials}`
             }
         });
-
-        console.log('Login response status:', response.status, response.statusText);
 
         if (!response.ok) {
             throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
@@ -41,11 +39,7 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        document.getElementById('userData').innerHTML = `
-            <p>Username: ${user.username}</p>
-            <p>Total XP: ${user.totalXP}</p>
-            <p>Email: ${user.email}</p>
-        `;
+        displayUsername.textContent = user.attrs.firstName;
         renderXPChart(xpData);
         renderSkillChart(skillData);
 
@@ -59,7 +53,7 @@ async function authentificateUser() {
 }
 
 async function fetchUserData(token) {
-    console.log("fetch USER data with token:", token);
+   /*  console.log("fetch USER data with token:", token); */
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -72,10 +66,7 @@ async function fetchUserData(token) {
                 query {
                     user {
                         id
-                        attrs {
-                            username
-                            email
-                        }
+                        attrs
                         transactions {
                             type
                             amount
@@ -97,17 +88,8 @@ async function fetchUserData(token) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
 
-        const user = result.data.user[0];
-
-        const totalXP = user.transactions.reduce((acc, txn) => {
-            return txn.type === 'xp' ? acc + txn.amount : acc;
-        }, 0);
-
-        const username = user.attrs.username;
-        const email = user.attrs.email;
-
-        return { username, totalXP, email};
-
+        console.log("user data fetch error:", result.data.user[0]);
+        return result.data.user[0];
     } catch (error) {
         throw new Error('Failed to fetch user data');
     }
@@ -191,23 +173,6 @@ async function fetchSkillData(token) {
     } catch (error) {
         throw new Error('Failed to fetch skill data');
     }
-}
-
-async function displayUserData(token) {
-    try {
-        const userData = await fetchUserData(token);
-        const userDisplay = document.getElementById('userData');
-        
-        userDisplay.innerHTML = `
-        <p>Username: ${userData.username}</p>
-        <p>Total Xp: ${userData.totalXP}</p>
-        <p>Email: ${userData.email}</p>
-        `;
-        console.log("Username:",username,"TotalXp:", totalXP, "Email:", email);
-    } catch (error) {
-        console.log('Error displaying user data:', error);
-    }
-
 }
 
 function formatDate(date) {
