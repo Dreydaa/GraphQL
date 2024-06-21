@@ -39,11 +39,11 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        displayUsername.textContent = user.username;
+        document.getElementById('displayUsername').textContent = user.username;
         document.getElementById('userData').innerHTML = `
-            <p>Username: ${userData.username}</p>
-            <p>Total XP: ${userData.totalXP}</p>
-            <p>Email: ${userData.email}</p>
+            <p>Username: ${user.username}</p>
+            <p>Total XP: ${user.totalXP}</p>
+            <p>Email: ${user.email}</p>
         `;
         renderXPChart(xpData);
         renderSkillChart(skillData);
@@ -71,7 +71,10 @@ async function fetchUserData(token) {
                 query {
                     user {
                         id
-                        attrs
+                        attrs {
+                            username
+                            email
+                        }
                         transactions {
                             type
                             amount
