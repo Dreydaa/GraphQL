@@ -72,10 +72,7 @@ async function fetchUserData(token) {
                 query {
                     user {
                         id
-                        attrs {
-                            firstName
-                            email
-                        }
+                        attrs
                         transactions {
                             type
                             amount
