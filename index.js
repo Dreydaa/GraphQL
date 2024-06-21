@@ -88,8 +88,18 @@ async function fetchUserData(token) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
 
+        const user = result.data.user[0];
         console.log("user data fetch error:", result.data.user[0]);
-        return result.data.user[0];
+
+        const totalXP = user.transactions.reduce((acc, txn) => {
+            return txn.type === 'xp' ? acc + txn.amount : acc;
+        }, 0);
+
+        const username = user.attrs.username
+        const email = user.attrs.email;
+
+        return { username, totalXP, email};
+
     } catch (error) {
         throw new Error('Failed to fetch user data');
     }
@@ -173,6 +183,22 @@ async function fetchSkillData(token) {
     } catch (error) {
         throw new Error('Failed to fetch skill data');
     }
+}
+
+async function displayUserData(token) {
+    try {
+        const userData = await fetchUserData(token);
+        const userDisplay = document.getElementById('userData');
+        
+        userDisplay.innerHTML = `
+        <p>Username: ${userData.username}</p>
+        <p>Total Xp: ${userData.totalXP}</p>
+        <p>Email: ${userData.email}</p>
+        `;
+    } catch (error) {
+        console.log('Error displaying user data:', error);
+    }
+
 }
 
 function formatDate(date) {
