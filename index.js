@@ -32,7 +32,7 @@ async function authentificateUser() {
             throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
         }
 
-        token = await response.json();
+        const token = await response.json();
         console.log("login successful:", token);
 
         const user = await fetchUserData(token);
@@ -72,7 +72,10 @@ async function fetchUserData(token) {
                 query {
                     user {
                         id
-                        attrs
+                        attrs {
+                            firstName
+                            email
+                        }
                         transactions {
                             type
                             amount
