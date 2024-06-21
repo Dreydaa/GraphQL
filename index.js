@@ -32,21 +32,16 @@ async function authentificateUser() {
             throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
         }
 
-        const token = await response.json();
+        token = await response.json();
         console.log("login successful:", token);
 
         const user = await fetchUserData(token);
         const xpData = await fetchXPData(token);
-
-        const totalXP = xpData.reduce((acc, txn) => acc + txn.amount, 0);
-
-        document.getElementById('username').textContent = `${user.attrs.firstName}`;
-        document.getElementById('eamil').textContent = `${user.attrs.email}`;
-        document.getElementById('totalXP').textContent =`${totalXP}`
-
-        
-        renderXPChart(xpData);
         const skillData = await fetchSkillData(token);
+
+        displayUsername.textContent = user.attrs.firstName;
+        displayUsername.textContent = user.attrs.email
+        renderXPChart(xpData);
         renderSkillChart(skillData);
 
         loginSection.style.display = 'none';
@@ -72,10 +67,7 @@ async function fetchUserData(token) {
                 query {
                     user {
                         id
-                        attrs {
-                            firstName
-                            email
-                        }
+                        attrs
                         transactions {
                             type
                             amount
@@ -96,8 +88,8 @@ async function fetchUserData(token) {
         if (result.errors) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
-        
-        console.log("Fetched user data:", result.data.user[0]);
+
+        console.log("user data fetch error:", result.data.user[0]);
         return result.data.user[0];
     } catch (error) {
         throw new Error('Failed to fetch user data');
@@ -306,7 +298,7 @@ function renderSkillChart(skillData) {
 
     const svglvlContainer = document.getElementById('skillsChartContainer');
     const svgWidth = 1000;
-    const svgHeight = 500;
+    const svgHeight = 700;
     const padding = 40;  // Padding for the axis labels and ticks
 
     if (isNaN(svgHeight) || isNaN(svgWidth) || svgHeight <= 0 || svgWidth <= 0) {
