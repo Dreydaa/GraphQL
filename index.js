@@ -37,10 +37,16 @@ async function authentificateUser() {
 
         const user = await fetchUserData(token);
         const xpData = await fetchXPData(token);
-        const skillData = await fetchSkillData(token);
 
-        displayUsername.textContent = user.attrs.firstName;
+        const totalXP = xpData.reduce((acc, txn) => acc + txn.amount, 0);
+
+        document.getElementById('username').textContent = `${user.attrs.firstName}`;
+        document.getElementById('eamil').textContent = `${user.attrs.email}`;
+        document.getElementById('totalXP').textContent =`${totalXP}`
+
+        
         renderXPChart(xpData);
+        const skillData = await fetchSkillData(token);
         renderSkillChart(skillData);
 
         loginSection.style.display = 'none';
@@ -66,7 +72,10 @@ async function fetchUserData(token) {
                 query {
                     user {
                         id
-                        attrs
+                        attrs {
+                            firstName
+                            email
+                        }
                         transactions {
                             type
                             amount
@@ -88,7 +97,6 @@ async function fetchUserData(token) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
 
-        console.log("user data fetch error:", result.data.user[0]);
         return result.data.user[0];
     } catch (error) {
         throw new Error('Failed to fetch user data');
