@@ -41,7 +41,6 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        document.getElementById('displayUsername').textContent = user.username;
         document.getElementById('userData').innerHTML = `
             <p>Username: ${user.username}</p>
             <p>Total XP: ${user.totalXP}</p>
@@ -103,7 +102,7 @@ async function fetchUserData(token) {
         const totalXP = user.transactions.reduce((acc, txn) => {
             return txn.type === 'xp' ? acc + txn.amount : acc;
         }, 0);
-        
+
         const username = user.attrs.username;
         const email = user.attrs.email;
 
