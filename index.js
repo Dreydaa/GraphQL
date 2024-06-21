@@ -281,15 +281,15 @@ function aggregateSkillData(skillData) {
     skillData.forEach(skill => {
         const skillType = skill.type;
         const skillAmount = skill.amount;
-
+        
         if (aggregatedData[skillType]) {
             aggregatedData[skillType] += skillAmount;
         } else {
-            aggregateSkillData[skillType] = skillAmount;
+            aggregatedData[skillType] = skillAmount;
         }
     });
 
-    return Object.entries(aggregatedData).map(([type, amount]) => ({type, amount}));
+    return Object.entries(aggregatedData).map(([type, amount]) => ({ type, amount }));
 }
 
 function renderSkillChart(skillData) {
@@ -316,7 +316,7 @@ function renderSkillChart(skillData) {
 
     const aggregatedSkillData = aggregateSkillData(skillData);
 
-    const numSkills = aggregatedSkillData.length;
+    const numSkills = aggregatedSkillData   .length;
     const barWidth = chartWidth / numSkills;
 
     if (isNaN(barWidth) || barWidth <= 0) {
