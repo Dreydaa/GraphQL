@@ -60,7 +60,7 @@ async function authentificateUser() {
 }
 
 async function fetchUserData(token) {
-    console.log("fetch USER data with token:", token);
+    console.log("Fetching user data with token:", token); // Add logging here
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -89,31 +89,44 @@ async function fetchUserData(token) {
             })
         });
 
+        console.log('GraphQL response status:', response.status, response.statusText); // Log response status
+
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status} ${errorText}`);
         }
 
         const result = await response.json();
+        console.log('GraphQL result:', result); // Log the result
+
         if (result.errors) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
 
-        const user = result.data.user[0];
-        console.log("user data fetch error:", result.data.user[0]);
+        if (!result.data || !result.data.user || result.data.user.length === 0) {
+            throw new Error('No user data found');
+        }
 
+        const user = result.data.user[0];
+
+        // Calculate total XP
         const totalXP = user.transactions.reduce((acc, txn) => {
             return txn.type === 'xp' ? acc + txn.amount : acc;
         }, 0);
 
-        const username = user.attrs.username
+        const username = user.attrs.username;
         const email = user.attrs.email;
 
-        return { username, totalXP, email};
+        console.log("User data extracted:", { username, totalXP, email }); // Log extracted user data
+
+        return { username, totalXP, email };
 
     } catch (error) {
+        console.error('Error in fetchUserData:', error); // Log the error
         throw new Error('Failed to fetch user data');
     }
 }
+
 
 async function fetchXPData(token) {
    /*  console.log("fetch xp data", token); */
