@@ -39,7 +39,7 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        console.log(user);
+        displayUserData(user);
         renderXPChart(xpData);
         renderSkillChart(skillData);
 
