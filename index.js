@@ -179,188 +179,6 @@ function formatDate(date) {
     const options = { month: 'short', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
   }
-/* 
-function renderXPChart(transactions) {
-    console.log(transactions);
-    const filteredTransactions = transactions.filter(transaction => {
-        return transaction.path.includes("/div-01") && !transaction.path.includes("piscine-js/");
-    });
-    const data = filteredTransactions.filter(filteredTransaction => {
-        return filteredTransaction.type === "xp";
-    });
-
-    if (data.length === 0) {
-        console.error("No valid transactions found for rendering XP chart.");
-        return;
-    }
-
-    const sortedData = data.slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-
-    const svgContainer = document.getElementById('xpChartContainer');
-    const width = 600;
-    const height = 400;
-
-    if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
-        console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
-        return;
-    }
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', '100%');
-
-    const accumulatedValues = [];
-    let accumulatedTotal = 0;
-    sortedData.forEach((entry, index) => {
-        accumulatedTotal += entry.amount;
-        accumulatedValues.push({ x: index, y: accumulatedTotal });
-    });
-
-    const yAxisStep = Math.ceil(Math.max(accumulatedTotal));
-
-    const dateStep = 30 * 24 * 60 * 60 * 1000;
-    const startDate = new Date(sortedData[0].createdAt);
-    const endDate = new Date(sortedData[sortedData.length - 1].createdAt);
-    const monthsDifference = (endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth() + 1;
-
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    const points = accumulatedValues.map(entry => {
-        const x = (entry.x / (sortedData.length - 1)) * width;
-        const y = height - (entry.y / yAxisStep) * height;
-        if (isNaN(x) || isNaN(y)) {
-            console.error(`NaN detected in polyline points: x=${x}, y=${y}`);
-        }
-        return `${x},${y}`;
-    });
-
-    if (points.some(point => point.includes('NaN'))) {
-        console.error("Detected NaN in polyline points. Aborting polyline creation.");
-        return;
-    }
-
-    line.setAttribute('points', points.join(' '));
-    line.setAttribute('fill', 'none');
-    line.setAttribute('stroke', '#4267B2');
-    line.setAttribute('stroke-width', '2');
-    svg.appendChild(line);
-
-    for (let i = 0; i <= 10; i++) {
-        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        yAxisTick.setAttribute('x1', '0');
-        yAxisTick.setAttribute('x2', width);
-        yAxisTick.setAttribute('y1', (i / 10) * height);
-        yAxisTick.setAttribute('y2', (i / 10) * height);
-        yAxisTick.setAttribute('stroke', '#ccc');
-        svg.appendChild(yAxisTick);
-        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        yAxisLabel.setAttribute('x', '5');
-        yAxisLabel.setAttribute('y', (i / 10) * height - 5);
-        yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(yAxisStep * (10 - i) / 10);
-        svg.appendChild(yAxisLabel);
-    }
-
-    for (let i = 0; i <= monthsDifference; i++) {
-        const dateForTick = new Date(startDate.getTime() + (i / monthsDifference) * monthsDifference * dateStep);
-        const xAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        xAxisTick.setAttribute('x1', (i / monthsDifference) * width);
-        xAxisTick.setAttribute('x2', (i / monthsDifference) * width);
-        xAxisTick.setAttribute('y1', '0');
-        xAxisTick.setAttribute('y2', height);
-        xAxisTick.setAttribute('stroke', '#ccc');
-        svg.appendChild(xAxisTick);
-        const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        xAxisLabel.setAttribute('x', (i / monthsDifference) * width);
-        xAxisLabel.setAttribute('y', height - 5);
-        xAxisLabel.setAttribute('fill', '#333');
-        xAxisLabel.textContent = formatDate(dateForTick);
-        svg.appendChild(xAxisLabel);
-    }
-    svgContainer.appendChild(svg);
-    return accumulatedTotal;
-}
-
-  function renderSkillPieChart(skillLevels) {
-    console.log(skillLevels);
-
-    const svglvlContainer = document.getElementById('skillsChartContainer');
-    const width = 600;
-    const height = 400;
-
-    if (isNaN(height) || isNaN(width) || height <= 0 || width <= 0) {
-        console.error(`Invalid dimensions for SVG container: height=${height}, width=${width}`);
-        return;
-    }
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', '100%');
-
-    const numSkills = Object.keys(skillLevels).length;
-    const barWidth = width / numSkills;
-
-    if (isNaN(barWidth) || barWidth <= 0) {
-        console.error(`Invalid bar width calculated: barWidth=${barWidth}`);
-        return;
-    }
-
-    let index = 0;
-    for (const [skillType, level] of Object.entries(skillLevels)) {
-        const skillAmount = level.amount;
-        if (isNaN(skillAmount)) {
-            console.error(`Invalid skill amount for ${skillType}: amount=${skillAmount}`);
-            continue;
-        }
-
-        const barHeight = (skillAmount / 100) * height;
-        const xPosition = index * barWidth;
-        const yPosition = height - barHeight;
-
-        if (isNaN(xPosition) || isNaN(yPosition) || isNaN(barHeight)) {
-            console.error(`NaN detected in bar chart: x=${xPosition}, y=${yPosition}, width=${barWidth}, height=${barHeight}`);
-            continue;
-        }
-
-        const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        bar.setAttribute('x', xPosition);
-        bar.setAttribute('y', yPosition);
-        bar.setAttribute('width', barWidth);
-        bar.setAttribute('height', barHeight);
-        bar.setAttribute('fill', '#4267B2');
-        svg.appendChild(bar);
-
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', xPosition + barWidth / 2);
-        label.setAttribute('y', height - 5);
-        label.setAttribute('fill', '#333');
-        label.setAttribute('text-anchor', 'middle');
-        label.textContent = skillType.substring(skillType.indexOf('_') + 1);
-        label.style.writingMode = 'vertical-lr';
-        label.style.fontSize = '14px';
-        svg.appendChild(label);
-        index++;
-    }
-
-    for (let i = 0; i <= 11; i++) {
-        const yAxisTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        yAxisTick.setAttribute('x1', '0');
-        yAxisTick.setAttribute('x2', width);
-        yAxisTick.setAttribute('y1', (i / 10) * height);
-        yAxisTick.setAttribute('y2', (i / 10) * height);
-        yAxisTick.setAttribute('stroke', '#ccc');
-        svg.appendChild(yAxisTick);
-
-        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        yAxisLabel.setAttribute('x', '5');
-        yAxisLabel.setAttribute('y', height - (i / 10) * height - 5);
-        yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(100 * i / 10);
-        svg.appendChild(yAxisLabel);
-    }
-
-    svglvlContainer.appendChild(svg);
-} */
-
 
 function renderXPChart(transactions) {
     console.log("Rendering XP chart with transactions:", transactions);
@@ -458,20 +276,20 @@ function renderXPChart(transactions) {
 }
 
 function aggregateSkillData(skillData) {
-    const aggregateData = {};
+    const aggregatedData = {};
 
     skillData.forEach(skill => {
         const skillType = skill.type;
         const skillAmount = skill.amount;
 
-        if (aggregateData[skillType]) {
-            aggregateData[skillType] += skillAmount;
+        if (aggregatedData[skillType]) {
+            aggregatedData[skillType] += skillAmount;
         } else {
             aggregateSkillData[skillType] = skillAmount;
         }
     });
 
-    return Object.entries(aggregateData).map(([type, amount]) => ({type, amount}));
+    return Object.entries(aggregatedData).map(([type, amount]) => ({type, amount}));
 }
 
 function renderSkillChart(skillData) {
@@ -496,9 +314,9 @@ function renderSkillChart(skillData) {
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
 
-    const aggregateSkillData = aggregateSkillData(skillData);
+    const aggregatedSkillData = aggregateSkillData(skillData);
 
-    const numSkills = aggregateSkillData.length;
+    const numSkills = aggregatedSkillData.length;
     const barWidth = chartWidth / numSkills;
 
     if (isNaN(barWidth) || barWidth <= 0) {
@@ -506,7 +324,7 @@ function renderSkillChart(skillData) {
         return;
     }
 
-    aggregateSkillData.forEach((skill, index) => {
+    aggregatedSkillData.forEach((skill, index) => {
         const skillType = skill.type;
         const skillAmount = skill.amount;
         if (isNaN(skillAmount)) {
