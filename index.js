@@ -355,7 +355,7 @@ function renderSkillChart(skillData) {
         label.setAttribute('fill', '#333');
         label.setAttribute('text-anchor', 'middle');
         label.setAttribute('transform', `rotate(-70 ${xPosition + (barWidth - 5) / 2} ${svgHeight - padding + 5})`);
-        label.setAttribute('font-size', '13px');
+        label.setAttribute('font-size', '16px');
         label.textContent = skillType.substring(skillType.indexOf('_') + 1);
         svg.appendChild(label);
     });
