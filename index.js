@@ -19,7 +19,7 @@ async function authentificateUser() {
     const base64Credentials = btoa(`${username}:${password}`);
 
     try {
-        /* console.log("Sending login request" ); */
+        console.log("Sending login request" );
         const response = await fetch('https://zone01normandie.org/api/auth/signin', {
             method: 'POST',
             headers: {
@@ -27,6 +27,8 @@ async function authentificateUser() {
                 'Authorization': `Basic ${base64Credentials}`
             }
         });
+
+        console.log('Login response status:', response.status, response.statusText);s
 
         if (!response.ok) {
             throw new Error(`Invalid :  ${response.status} ${response.statusText}`);
@@ -58,7 +60,7 @@ async function authentificateUser() {
 }
 
 async function fetchUserData(token) {
-   /*  console.log("fetch USER data with token:", token); */
+    console.log("fetch USER data with token:", token);
     try {
         const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
             method: 'POST',
