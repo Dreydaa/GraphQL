@@ -46,13 +46,6 @@ async function authentificateUser() {
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
 
-        console.log("Skill Levels:");
-    const skilldata = createSkills(skillData); // Utilisez createSkills avec les données de compétence
-    console.log(skilldata);
-    Object.entries(skilldata).forEach(([skillType, level]) => {
-      console.log(`${skillType}: ${level}`);
-    });
-
     } catch (error) {
         loginError.textContent = `login failed: ${error.message}`;
         console.log('login error:', error)
@@ -464,19 +457,21 @@ function renderXPChart(transactions) {
     }
 }
 
-function createSkills(skilldts) {
-    const skilldata = {};
-    skilldts.forEach((skilldt) => {
-      const { type, amount } = skilldt;
-      if (type.startsWith("skill_")) {
-        const skillType = type.replace("skill_", "");
-        if (!(skillType in skillLevels) || amount > skilldata[skillType]) {
-          skilldata[skillType] = amount;
+function aggregateSkillData(skillData) {
+    const aggregateData = {};
+
+    skillData.forEach(skill => {
+        const skillType = skill.type;
+        const skillAmount = skill.amount;
+
+        if (aggregateData[skillType]) {
+            aggregateData[skillType] += skillAmount;
+        } else {
+            aggregateSkillData[skillType] = skillAmount;
         }
-      }
     });
-    console.log(skilldata);
-    return skilldata;
+
+    return Object.entries(aggregateData).map(([type, amount]) => ({type, amount}));
 }
 
 function renderSkillChart(skillData) {
@@ -501,7 +496,9 @@ function renderSkillChart(skillData) {
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
 
-    const numSkills = skillData.length;
+    const aggregateSkillData = aggregateSkillData(skillData);
+
+    const numSkills = aggregateSkillData.length;
     const barWidth = chartWidth / numSkills;
 
     if (isNaN(barWidth) || barWidth <= 0) {
@@ -509,7 +506,7 @@ function renderSkillChart(skillData) {
         return;
     }
 
-    skillData.forEach((skill, index) => {
+    aggregateSkillData.forEach((skill, index) => {
         const skillType = skill.type;
         const skillAmount = skill.amount;
         if (isNaN(skillAmount)) {
