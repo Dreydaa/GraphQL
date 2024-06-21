@@ -96,7 +96,8 @@ async function fetchUserData(token) {
         if (result.errors) {
             throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
         }
-
+        
+        console.log("Fetched user data:", result.data.user[0]);
         return result.data.user[0];
     } catch (error) {
         throw new Error('Failed to fetch user data');
