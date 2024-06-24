@@ -42,7 +42,7 @@ async function authentificateUser() {
         const skillData = await fetchSkillData(token);
 
 
-        const totalXP = Math.round(xpData.reduce((acc, txn) => acc + txn.amount, 0));
+        const totalXP = renderXPChart(xpData);
         const auditData = await fetchAuditData(token);
         const totalAuditRatio = calculateTotalAuditRatio(auditData);
 
@@ -262,14 +262,6 @@ function formatDate(date) {
     return date.toLocaleDateString('en-US', options);
   }
 
-  const accumulatedXP = [];
-    let totalXP = 0;
-    sortedXPData.forEach((entry, index) => {
-        totalXP += entry.amount;
-        accumulatedXP.push({ x: index, y: totalXP });
-    });
-    console.log("Accumulated XP data:", accumulatedXP);
-
 function renderXPChart(transactions) {
     console.log("Rendering XP chart with transactions:", transactions);
 
@@ -290,13 +282,22 @@ function renderXPChart(transactions) {
     svg.setAttribute('height', svgHeight);
     svgContainer.appendChild(svg);
 
+    
+    const accumulatedXP = [];
+    let totalXP = 0;
+    sortedXPData.forEach((entry, index) => {
+        totalXP += entry.amount;
+        accumulatedXP.push({ x: index, y: totalXP });
+    });
+    
+    console.log("Accumulated XP data:", accumulatedXP);
+    console.log("Accumulated XP data in renderXPChart :", accumulatedXP);
+
     const maxXP = Math.max(...accumulatedXP.map(d => d.y));
     if (maxXP === 0) {
         console.error("Max XP is 0, cannot render chart.");
-        return;
+        return totalXP  ;
     }
-
-    console.log("Accumulated XP data in renderXPChart :", accumulatedXP);
 
     const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
     console.log("Line points for XP chart:", linePoints);
@@ -357,6 +358,7 @@ function renderXPChart(transactions) {
         xAxisLabel.textContent = formatDate(dateForTick);
         svg.appendChild(xAxisLabel);
     }
+    return totalXP;
 }
 
 function aggregateSkillData(skillData) {
