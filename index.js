@@ -7,6 +7,8 @@ const passInput = document.getElementById("passInput");
 const signInBtn = document.getElementById(".signInBtn");
 const loginError = document.getElementById("loginError");
 const displayUsername = document.getElementById("displayUsername")/* [0] */;
+const usernameDisplay = document.getElementById("username");
+const emailDisplay = document.getElementById("email");
 const userDataContainer = document.getElementById("userData")/* [0] */;
 const signOutBtn = document.getElementById("signOutBtn");
 
@@ -39,8 +41,10 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        displayUsername.textContent = user.attrs.firstName;
-        displayUsername.textContent = user.attrs.email;
+
+        usernameDisplay.textContent = user.attrs.username;
+        emailDisplay.textContent = user.attrs.email;
+        
         renderXPChart(xpData);
         renderSkillChart(skillData);
         loginSection.style.display = 'none';
