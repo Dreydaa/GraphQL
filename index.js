@@ -44,7 +44,10 @@ async function authentificateUser() {
 
         displayUsername.textContent = user.attrs.firstName;
         displayUsername.textContent = user.attrs.lastName;
-        console.log('a voir:', user.attrs);
+        console.log('a voir:', user.attrs.firstName);
+        console.log('a voir:', user.attrs.lastName);
+        console.log('a voir:', user.attrs.id);
+        console.log('a voir:', user.attrs.email);
         
         renderXPChart(xpData);
         renderSkillChart(skillData);
