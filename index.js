@@ -296,6 +296,8 @@ function renderXPChart(transactions) {
         return;
     }
 
+    console.log("Accumulated XP data in renderXPChart :", accumulatedXP);
+
     const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
     console.log("Line points for XP chart:", linePoints);
 
