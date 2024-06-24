@@ -309,8 +309,8 @@ function renderSkillChart(skillData) {
         return;
     }
 
-    const chartWidth = svgWidth - 2 * padding;
-    const chartHeight = svgHeight - 2 * padding;
+    const chartWidth = svgWidth - 4 * padding;
+    const chartHeight = svgHeight - 4 * padding;
 
     svglvlContainer.innerHTML = '';  // Clear any existing content
 
@@ -379,7 +379,7 @@ function renderSkillChart(skillData) {
         yAxisLabel.setAttribute('y', padding + (i / 10) * chartHeight + 5);
         yAxisLabel.setAttribute('text-anchor', 'end');
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(1000 * (10 - i) / 10);
+        yAxisLabel.textContent = Math.round(100 * (10 - i) / 10);
         svg.appendChild(yAxisLabel);
     }
 
