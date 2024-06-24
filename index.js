@@ -262,6 +262,14 @@ function formatDate(date) {
     return date.toLocaleDateString('en-US', options);
   }
 
+  const accumulatedXP = [];
+    let totalXP = 0;
+    sortedXPData.forEach((entry, index) => {
+        totalXP += entry.amount;
+        accumulatedXP.push({ x: index, y: totalXP });
+    });
+    console.log("Accumulated XP data:", accumulatedXP);
+
 function renderXPChart(transactions) {
     console.log("Rendering XP chart with transactions:", transactions);
 
@@ -281,14 +289,6 @@ function renderXPChart(transactions) {
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
     svgContainer.appendChild(svg);
-
-    const accumulatedXP = [];
-    let totalXP = 0;
-    sortedXPData.forEach((entry, index) => {
-        totalXP += entry.amount;
-        accumulatedXP.push({ x: index, y: totalXP });
-    });
-    console.log("Accumulated XP data:", accumulatedXP);
 
     const maxXP = Math.max(...accumulatedXP.map(d => d.y));
     if (maxXP === 0) {
