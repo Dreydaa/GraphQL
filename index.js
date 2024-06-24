@@ -41,13 +41,15 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        const p = document.createElement("div");
+        displayUserInfo(user);
+
+        /* const p = document.createElement("div");
         const firstName = displayUsername.textContent = user.attrs.firstName;
         const lastName = displayUsername.textContent = user.attrs.lastName;
         p.appendChild(firstName, lastName);
 
         const currentDiv = document.getElementById("displayUsername");
-        document.body.insertBefore(p, currentDiv);
+        document.body.insertBefore(p, currentDiv); */
 
         console.log('a voir:', user.attrs.firstName);
         console.log('a voir:', user.attrs.lastName);
@@ -64,6 +66,21 @@ async function authentificateUser() {
         loginError.textContent = `login failed: ${error.message}`;
         console.log('login error:', error)
     }
+}
+
+function displayUserInfo(user) {
+    const firstNameElement = document.createElement('p');
+    firstNameElement.textContent = `${user.attrs.firstName}`;
+
+    const lastNameElement = document.createElement('p');
+    lastNameElement.textContent = `${user.attrs.lastName}`;
+
+    const emailElement = document.createElement('p');
+    emailElement.textContent = `${user.attrs.email}`;
+
+    displayUsername.appendChild(firstNameElement);
+    displayUsername.appendChild(lastNameElement);
+    displayUsername.appendChild(emailElement);
 }
 
 async function fetchUserData(token) {
