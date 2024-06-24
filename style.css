@@ -85,9 +85,7 @@
 .signOutBtn {
     width: 100px;
     height: 22px;
-    margin: 10px ;
-    position: absolute;
-    right: 0;
+    left: 15%;
     font-weight: 600;
     background-color: rgb(99, 99, 99);
     text-align: center;
@@ -104,18 +102,3 @@
     border:solid 1px rgb(79, 79, 79) ;
     font-style: italic;
 }
-
-#xpChartContainer {
-    /* height: 500px;
-    width: 1000px;
-    background-color: darkred; */
-    top: 20%;
-    display: flex; 
-    position: absolute;
-}
-#skillsChartContainer {
-    position: absolute;
-    left: 0;
-    top:80%;
-    position: absolute;
-} 
