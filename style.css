@@ -85,8 +85,10 @@
 .signOutBtn {
     width: 100px;
     height: 22px;
+    margin: 10px ;
+    position: absolute;
+    right: 0;
     font-weight: 600;
-    left: 15%;
     background-color: rgb(99, 99, 99);
     text-align: center;
     color: rgb(255, 255, 255);
@@ -100,7 +102,6 @@
     box-shadow: 10px 5px 5px 5px rgb(127, 127, 127);
     background-color: gray;   
     border:solid 1px rgb(79, 79, 79) ;
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
     font-style: italic;
 }
 

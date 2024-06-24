@@ -354,6 +354,23 @@ function aggregateSkillData(skillData) {
     return Object.entries(aggregatedData).map(([type, amount]) => ({ type, amount }));
 }
 
+function aggregateSkillData(skillData) {
+    const aggregatedData = {};
+
+    skillData.forEach(skill => {
+        const skillType = skill.type;
+        const skillAmount = skill.amount;
+
+        if (aggregatedData[skillType]) {
+            aggregatedData[skillType] += skillAmount;
+        } else {
+            aggregatedData[skillType] = skillAmount;
+        }
+    });
+
+    return Object.entries(aggregatedData).map(([type, amount]) => ({ type, amount }));
+}
+
 function createSkills(transactions) {
     const skillLevels = {};
     transactions.forEach((transaction) => {
@@ -378,10 +395,12 @@ function renderSkillChart(skillData) {
     console.log("SVG Container:", svgContainer);
 
     const svgWidth = 1000;
-    const svgHeight = 700; // Height of the SVG
-    const barHeight = 20; // Height of each bar
-    const barSpacing = 5; // Spacing between bars
-    const maxBarWidth = svgWidth * 0.8; // Maximum width for bars
+    const svgHeight = 500; // Height of the SVG
+    const padding = 40; // Padding for the axis labels and ticks
+    const barWidth = 50; // Width of each bar
+    const barSpacing = 20; // Spacing between bars
+
+    const maxBarHeight = svgHeight - 2 * padding; // Maximum height for bars
     const labelOffset = 5; // Offset for label inside the bar
     const percentageOffset = 10; // Offset for percentage outside the bar
 
@@ -397,7 +416,7 @@ function renderSkillChart(skillData) {
     svg.setAttribute('width', svgWidth);
     svg.setAttribute('height', svgHeight);
 
-    let yPosition = barSpacing; // Initial y-position
+    let xPosition = padding; // Initial x-position
 
     // Iterate through allSkills to create bars
     allSkills.forEach(skillType => {
@@ -405,55 +424,46 @@ function renderSkillChart(skillData) {
         const level = skillLevels[skillType];
         console.log("Skill:", skillType, "Level:", level);
 
-        // Calculate width of the bar based on percentage level
-        const barWidth = (level / 100) * maxBarWidth;
+        // Calculate height of the bar based on percentage level
+        const barHeight = (level / 100) * maxBarHeight;
 
         // Create bar
         const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        bar.setAttribute('x', 0);
-        bar.setAttribute('y', yPosition);
+        bar.setAttribute('x', xPosition);
+        bar.setAttribute('y', svgHeight - padding - barHeight);
         bar.setAttribute('width', barWidth);
         bar.setAttribute('height', barHeight);
         bar.setAttribute('fill', 'steelblue'); // Bar color
         svg.appendChild(bar);
 
-        // Display skill type label inside the bar
+        // Display skill type label below the bar
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', labelOffset); // Position inside the bar
-        label.setAttribute('y', yPosition + barHeight / 2);
+        label.setAttribute('x', xPosition + barWidth / 2);
+        label.setAttribute('y', svgHeight - padding + 20);
         label.setAttribute('fill', '#333');
-        label.setAttribute('dominant-baseline', 'middle');
+        label.setAttribute('text-anchor', 'middle');
         label.setAttribute('font-size', '12px');
         label.textContent = skillType.toUpperCase(); // Skill type in uppercase
         svg.appendChild(label);
 
-        // Display percentage outside the bar with offset to the right
+        // Display percentage above the bar
         const percentage = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        percentage.setAttribute('x', barWidth + percentageOffset); // Position outside the bar
-        percentage.setAttribute('y', yPosition + barHeight / 2);
+        percentage.setAttribute('x', xPosition + barWidth / 2);
+        percentage.setAttribute('y', svgHeight - padding - barHeight - percentageOffset);
         percentage.setAttribute('fill', '#333');
-        percentage.setAttribute('dominant-baseline', 'middle');
+        percentage.setAttribute('text-anchor', 'middle');
+        percentage.setAttribute('dominant-baseline', 'central');
         percentage.setAttribute('font-size', '12px');
         percentage.textContent = `${level}%`; // Display percentage
         svg.appendChild(percentage);
 
-        // Increment y-position for the next bar
-        yPosition += barHeight + barSpacing;
+        // Increment x-position for the next bar
+        xPosition += barWidth + barSpacing;
     });
 
+    svgContainer.innerHTML = '';  // Clear any existing content
     svgContainer.appendChild(svg);
 }
-
-/* // Example usage
-const sampleSkillData = [
-    { type: "skill_tech", amount: 70 },
-    { type: "skill_tech", amount: 80 },
-    { type: "skill_management", amount: 60 },
-    { type: "skill_communication", amount: 50 }
-];
-
-renderSkillChart(sampleSkillData); */
-
 
 function logoutUser() {
     console.log("logout user");
