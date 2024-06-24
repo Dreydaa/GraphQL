@@ -41,9 +41,11 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
+        const p = document.createElement("p");
+        const firstName = displayUsername.textContent = user.attrs.firstName;
+        const lastName = displayUsername.textContent = user.attrs.lastName;
+        p.appendChild(firstName, lastName);
 
-        displayUsername.textContent = user.attrs.firstName;
-        displayUsername.textContent = user.attrs.lastName;
         console.log('a voir:', user.attrs.firstName);
         console.log('a voir:', user.attrs.lastName);
         console.log('a voir:', user.attrs.email);
