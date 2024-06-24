@@ -42,7 +42,8 @@ async function authentificateUser() {
         const skillData = await fetchSkillData(token);
 
 
-        displayUsername.textContent = user.attrs;
+        displayUsername.textContent = user.attrs.firstName;
+        displayUsername.textContent = user.attrs.lastName;
         console.log('a voir:', user.attrs);
         
         renderXPChart(xpData);
