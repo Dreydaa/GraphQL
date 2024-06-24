@@ -77,7 +77,7 @@ function displayUserInfo(user, totalXP, totalAuditRatio) {
     totalXPElement.textContent = `${totalXP}`;
 
     const totalAuditRatioElement = document.createElement('p');
-    totalAuditRatioElement.textContent = `${totalAuditRatio}`;
+    totalAuditRatioElement.textContent = `${totalAuditRatio.toFixed(5)}`;
 
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
