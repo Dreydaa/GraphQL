@@ -40,10 +40,9 @@ async function authentificateUser() {
         const skillData = await fetchSkillData(token);
 
         displayUsername.textContent = user.attrs.firstName;
-        displayUsername.textContent = user.attrs.email
+        displayUsername.textContent = user.attr.id
         renderXPChart(xpData);
         renderSkillChart(skillData);
-
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
 
