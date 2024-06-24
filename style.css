@@ -94,8 +94,8 @@
 }
 
 .displayUsername {
-    flex-direction: column;
     display: flex;
+    position: absolute;
     margin: 10px;
     width: 200px;
     height: 100px;
