@@ -377,8 +377,8 @@ function renderSkillChart(skillData) {
     const svgContainer = document.getElementById('skillsChartContainer');
     console.log("SVG Container:", svgContainer);
 
-    const svgWidth = svgContainer.clientWidth;
-    const svgHeight = 500; // Height of the SVG
+    const svgWidth = 1000;
+    const svgHeight = 700; // Height of the SVG
     const barHeight = 20; // Height of each bar
     const barSpacing = 5; // Spacing between bars
     const maxBarWidth = svgWidth * 0.8; // Maximum width for bars
