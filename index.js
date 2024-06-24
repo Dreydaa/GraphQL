@@ -52,7 +52,7 @@ async function authentificateUser() {
         console.log('a voir:', user.attrs.lastName);
         console.log('a voir:', user.attrs.email); */
 
-        renderXPChart(xpData);
+        /* renderXPChart(xpData); */
         renderSkillChart(skillData);
         loginSection.style.display = 'none';
         profileSection.style.display = 'block';
