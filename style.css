@@ -101,9 +101,7 @@
     background-color: gray;   
     border:solid 1px rgb(79, 79, 79) ;
     font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
-    font-size: 20px;
     font-style: italic;
-    font-weight: 900;
 }
 
 #xpChartContainer {
