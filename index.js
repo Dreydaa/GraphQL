@@ -76,11 +76,19 @@ function displayUserInfo(user) {
     lastNameElement.textContent = `${user.attrs.lastName}`;
 
     const emailElement = document.createElement('p');
-    emailElement.textContent = `${user.attrs.email}`;
+    emailElement.textContent = `${user.attrs.email}`;4
+
+    const adressElement = document.createElement('p');
+    adressElement.textContent = `${user.attrs.adress}`;
+
+    const profileElement = document.createElement('p');
+    profileElement.textContent = `${user.attrs.profile}`;
 
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
+    displayUsername.appendChild(adressElement);
+    displayUsername.appendChild(profileElement);
 }
 
 async function fetchUserData(token) {
