@@ -44,10 +44,11 @@ async function authentificateUser() {
 
         const totalXPr = Math.round(renderXPChart(xpData));
         console.log(totalXPr);
-        const auditData = await fetchAuditData(token);
-        const totalAuditRatio = calculateTotalAuditRatio(auditData);
 
-        displayUserInfo(user, totalXPr, totalAuditRatio);
+
+        const ratio = createRatio(xpData);
+
+        displayUserInfo(user, totalXPr, ratio);
 
         /* console.log('a voir:', user.attrs.firstName);
         console.log('a voir:', user.attrs.lastName);
@@ -77,14 +78,10 @@ function displayUserInfo(user, totalXPr, totalAuditRatio) {
     const totalXPElement = document.createElement('p');
     totalXPElement.textContent = `${totalXPr}`;
 
-    const totalAuditRatioElement = document.createElement('p');
-    totalAuditRatioElement.textContent = `${totalAuditRatio.toFixed(5)}`;
-
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
     displayUsername.appendChild(totalXPElement);
-    displayUsername.appendChild(totalAuditRatioElement);
 }
 
 function calculateTotalAuditRatio(auditData) {
