@@ -7,8 +7,8 @@ const passInput = document.getElementById("passInput");
 const signInBtn = document.getElementById(".signInBtn");
 const loginError = document.getElementById("loginError");
 const displayUsername = document.getElementById("displayUsername")/* [0] */;
-const usernameDisplay = document.getElementById("username");
-const emailDisplay = document.getElementById("email");
+/* const usernameDisplay = document.getElementById("username");
+const emailDisplay = document.getElementById("email"); */
 const userDataContainer = document.getElementById("userData")/* [0] */;
 const signOutBtn = document.getElementById("signOutBtn");
 
@@ -42,8 +42,8 @@ async function authentificateUser() {
         const skillData = await fetchSkillData(token);
 
 
-        usernameDisplay.textContent = user.attrs.username;
-        emailDisplay.textContent = user.attrs.email;
+        displayUsername.textContent = user.attrs.username;
+        displayUsername.textContent = user.attrs.email;
         
         renderXPChart(xpData);
         renderSkillChart(skillData);
@@ -309,8 +309,8 @@ function renderSkillChart(skillData) {
         return;
     }
 
-    const chartWidth = svgWidth - 4 * padding;
-    const chartHeight = svgHeight - 4 * padding;
+    const chartWidth = svgWidth - 2 * padding;
+    const chartHeight = svgHeight - 2 * padding;
 
     svglvlContainer.innerHTML = '';  // Clear any existing content
 
