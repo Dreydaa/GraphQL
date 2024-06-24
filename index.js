@@ -71,10 +71,7 @@ function displayUserInfo(user, totalXP, totalAuditRatio) {
     lastNameElement.textContent = `${user.attrs.lastName}`;
 
     const emailElement = document.createElement('p');
-    emailElement.textContent = `${user.attrs.email}`;4
-
-    const addressElement = document.createElement('p');
-    addressElement.textContent = `${user.attrs.address}`;
+    emailElement.textContent = `${user.attrs.email}`;
 
     const totalXPElement = document.createElement('p');
     totalXPElement.textContent = `${totalXP}`;
@@ -85,7 +82,6 @@ function displayUserInfo(user, totalXP, totalAuditRatio) {
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
-    displayUsername.appendChild(addressElement);
     displayUsername.appendChild(totalXPElement);
     displayUsername.appendChild(totalAuditRatioElement);
 }
