@@ -473,6 +473,7 @@ function logoutUser() {
     loginSection.style.display = 'block';
     profileSection.style.display = 'none';
 
+    displayUsername.innerHTML = '';
     document.getElementById('xpChartContainer').innerHTML = '';
     document.getElementById('skillsChartContainer').innerHTML = '';
 }
