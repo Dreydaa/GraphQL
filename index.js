@@ -41,22 +41,17 @@ async function authentificateUser() {
         const xpData = await fetchXPData(token);
         const skillData = await fetchSkillData(token);
 
-        displayUserInfo(user);
 
-        /* const p = document.createElement("div");
-        const firstName = displayUsername.textContent = user.attrs.firstName;
-        const lastName = displayUsername.textContent = user.attrs.lastName;
-        p.appendChild(firstName, lastName);
+        const totalXP = xpData.reduce((acc, txn) => acc + txn.amount, 0);
+        const auditData = await fetchAuditData(token);
+        const totalAuditRatio = calculateTotalAuditRatio(auditData);
 
-        const currentDiv = document.getElementById("displayUsername");
-        document.body.insertBefore(p, currentDiv); */
+        displayUserInfo(user, totalXP, totalAuditRatio);
 
-        console.log('a voir:', user.attrs.firstName);
+        /* console.log('a voir:', user.attrs.firstName);
         console.log('a voir:', user.attrs.lastName);
-        console.log('a voir:', user.attrs.email);
+        console.log('a voir:', user.attrs.email); */
 
-
-        
         renderXPChart(xpData);
         renderSkillChart(skillData);
         loginSection.style.display = 'none';
@@ -68,7 +63,7 @@ async function authentificateUser() {
     }
 }
 
-function displayUserInfo(user) {
+function displayUserInfo(user, totalXP, totalAuditRatio) {
     const firstNameElement = document.createElement('p');
     firstNameElement.textContent = `${user.attrs.firstName}`;
 
@@ -78,17 +73,30 @@ function displayUserInfo(user) {
     const emailElement = document.createElement('p');
     emailElement.textContent = `${user.attrs.email}`;4
 
-    const adressElement = document.createElement('p');
-    adressElement.textContent = `${user.attrs.adress}`;
+    const addressElement = document.createElement('p');
+    addressElement.textContent = `${user.attrs.address}`;
 
-    const profileElement = document.createElement('p');
-    profileElement.textContent = `${user.attrs.profile}`;
+    const totalXPElement = document.createElement('p');
+    totalXPElement.textContent = `${totalXP}`;
+
+    const totalAuditRatioElement = document.createElement('p');
+    totalAuditRatioElement.textContent = `${totalAuditRatio.toFixed(2)}`;
 
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
-    displayUsername.appendChild(adressElement);
-    displayUsername.appendChild(profileElement);
+    displayUsername.appendChild(addressElement);
+    displayUsername.appendChild(totalXPElement);
+    displayUsername.appendChild(totalAuditRatioElement);
+}
+
+function calculateTotalAuditRatio(auditData) {
+    let totalRatio = 0;
+
+    auditData.forEach(audit => {
+        totalRatio += (audit.amount / audit.total);
+    });
+    return totalRatio;
 }
 
 async function fetchUserData(token) {
@@ -211,6 +219,45 @@ async function fetchSkillData(token) {
         return result.data.transaction;
     } catch (error) {
         throw new Error('Failed to fetch skill data');
+    }
+}
+
+async function fetchAuditData(token) {
+    try {
+        const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                query: `
+                query {
+                    user {
+                        transactions {
+                            type
+                            amount
+                            path
+                            createdAt
+                        }
+                    }
+                }
+                `
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (result.errors) {
+            throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
+        }
+
+        return result.data.user[0].transactions.filter(txn => txn.type === 'audit');
+    } catch (error) {
+        throw new Error('Failed to fetch audit data');
     }
 }
 
