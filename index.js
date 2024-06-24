@@ -7,6 +7,7 @@ const passInput = document.getElementById("passInput");
 const signInBtn = document.getElementById(".signInBtn");
 const loginError = document.getElementById("loginError");
 const displayUsername = document.getElementById("displayUsername")/* [0] */;
+const displayStats = document.getElementById('displayStats');
 /* const usernameDisplay = document.getElementById("username");
 const emailDisplay = document.getElementById("email"); */
 const userDataContainer = document.getElementById("userData")/* [0] */;
@@ -84,8 +85,8 @@ function displayUserInfo(user, totalXPr, ratio) {
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
-    displayUsername.appendChild(totalXPElement);
-    displayUsername.appendChild(ratioElement);
+    displayStats.appendChild(totalXPElement);
+    displayStats.appendChild(ratioElement);
 }
 
 function createRatio(transactions) {
