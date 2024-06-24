@@ -379,7 +379,7 @@ function renderSkillChart(skillData) {
         yAxisLabel.setAttribute('y', padding + (i / 10) * chartHeight + 5);
         yAxisLabel.setAttribute('text-anchor', 'end');
         yAxisLabel.setAttribute('fill', '#333');
-        yAxisLabel.textContent = Math.round(100 * (10 - i) / 10);
+        yAxisLabel.textContent = Math.round(1000 * (10 - i) / 10);
         svg.appendChild(yAxisLabel);
     }
 
