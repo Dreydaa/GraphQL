@@ -96,7 +96,7 @@
 .displayUsername {
     margin: 10px;
     width: 200px;
-    height: 100px;
+    height: auto;
     box-shadow: 10px 5px 5px 5px rgb(127, 127, 127);
     background-color: gray;   
     border:solid 1px rgb(79, 79, 79) ;
