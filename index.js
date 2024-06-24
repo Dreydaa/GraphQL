@@ -42,12 +42,12 @@ async function authentificateUser() {
         const skillData = await fetchSkillData(token);
 
 
-        const totalXP = Math.round(renderXPChart(xpData));
-        console.log(totalXP);
+        const totalXPr = Math.round(renderXPChart(xpData));
+        console.log(totalXPr);
         const auditData = await fetchAuditData(token);
         const totalAuditRatio = calculateTotalAuditRatio(auditData);
 
-        displayUserInfo(user, totalXP, totalAuditRatio);
+        displayUserInfo(user, totalXPr, totalAuditRatio);
 
         /* console.log('a voir:', user.attrs.firstName);
         console.log('a voir:', user.attrs.lastName);
@@ -64,7 +64,7 @@ async function authentificateUser() {
     }
 }
 
-function displayUserInfo(user, totalXP, totalAuditRatio) {
+function displayUserInfo(user, totalXPr, totalAuditRatio) {
     const firstNameElement = document.createElement('p');
     firstNameElement.textContent = `${user.attrs.firstName}`;
 
@@ -75,7 +75,7 @@ function displayUserInfo(user, totalXP, totalAuditRatio) {
     emailElement.textContent = `${user.attrs.email}`;
 
     const totalXPElement = document.createElement('p');
-    totalXPElement.textContent = `${totalXP}`;
+    totalXPElement.textContent = `${totalXPr}`;
 
     const totalAuditRatioElement = document.createElement('p');
     totalAuditRatioElement.textContent = `${totalAuditRatio.toFixed(5)}`;
