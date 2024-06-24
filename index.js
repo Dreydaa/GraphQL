@@ -395,7 +395,7 @@ function renderSkillChart(skillData) {
     console.log("SVG Container:", svgContainer);
 
     const svgWidth = 1000;
-    const svgHeight = 300; // Height of the SVG
+    const svgHeight = 250; // Height of the SVG
     const padding = 40; // Padding for the axis labels and ticks
     const barWidth = 50; // Width of each bar
     const barSpacing = 20; // Spacing between bars
