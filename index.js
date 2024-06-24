@@ -68,16 +68,16 @@ async function authentificateUser() {
 
 function displayUserInfo(user, totalXPr, ratio) {
     const firstNameElement = document.createElement('p');
-    firstNameElement.textContent = `Prénom : ${user.attrs.firstName}`;
+    firstNameElement.textContent = `First Name : ${user.attrs.firstName}`;
 
     const lastNameElement = document.createElement('p');
-    lastNameElement.textContent = `Nom de f. : ${user.attrs.lastName}`;
+    lastNameElement.textContent = `LastName : ${user.attrs.lastName}`;
 
     const emailElement = document.createElement('p');
     emailElement.textContent = `E-mail : ${user.attrs.email}`;
 
     const totalXPElement = document.createElement('p');
-    totalXPElement.textContent = `xp : ${totalXPr}`;
+    totalXPElement.textContent = `XP : ${totalXPr}`;
 
     const ratioElement = document.createElement('p');
     ratioElement.textContent = `Ratio : ${ratio}`;
@@ -85,8 +85,8 @@ function displayUserInfo(user, totalXPr, ratio) {
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
-    displayStats.appendChild(totalXPElement);
-    displayStats.appendChild(ratioElement);
+    displayUsername.appendChild(totalXPElement);
+    displayUsername.appendChild(ratioElement);
 }
 
 function createRatio(transactions) {

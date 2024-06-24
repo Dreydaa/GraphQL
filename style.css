@@ -94,28 +94,12 @@
 }
 
 .displayUsername {
-    display: flex;
-    flex-wrap: wrap;
     margin: 10px;
     width: 200px;
     height: 100px;
     box-shadow: 10px 5px 5px 5px rgb(127, 127, 127);
     background-color: gray;   
     border:solid 1px rgb(79, 79, 79) ;
-}
-
-.displayStats {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 10px;
-    width: 200px;
-    height: 100px;
-    box-shadow: 10px 5px 5px 5px rgb(127, 127, 127);
-    background-color: gray;   
-    border:solid 1px rgb(79, 79, 79) ;
-}
-
-.username {
     font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
     font-size: 20px;
     font-style: italic;
