@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
   }
-  
+
   body {
     height: 100vh;
     width: 100vw;
@@ -22,6 +22,10 @@
     background-color: rgb(67, 67, 67);
     padding: 2rem;
     color: white;
+}
+
+p {
+    display: flex;
 }
 
 .title {
