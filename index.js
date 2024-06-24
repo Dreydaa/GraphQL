@@ -65,32 +65,48 @@ async function authentificateUser() {
     }
 }
 
-function displayUserInfo(user, totalXPr, totalAuditRatio) {
+function displayUserInfo(user, totalXPr, ratio) {
     const firstNameElement = document.createElement('p');
-    firstNameElement.textContent = `${user.attrs.firstName}`;
+    firstNameElement.textContent = `Prénom : ${user.attrs.firstName}`;
 
     const lastNameElement = document.createElement('p');
-    lastNameElement.textContent = `${user.attrs.lastName}`;
+    lastNameElement.textContent = `Nom de f. : ${user.attrs.lastName}`;
 
     const emailElement = document.createElement('p');
-    emailElement.textContent = `${user.attrs.email}`;
+    emailElement.textContent = `E-mail : ${user.attrs.email}`;
 
     const totalXPElement = document.createElement('p');
-    totalXPElement.textContent = `${totalXPr}`;
+    totalXPElement.textContent = `xp : ${totalXPr}`;
+
+    const ratioElement = document.createElement('p');
+    ratioElement.textContent = `Ratio : ${ratio}`;
 
     displayUsername.appendChild(firstNameElement);
     displayUsername.appendChild(lastNameElement);
     displayUsername.appendChild(emailElement);
     displayUsername.appendChild(totalXPElement);
+    displayUsername.appendChild(ratioElement);
 }
 
-function calculateTotalAuditRatio(auditData) {
-    let totalRatio = 0;
+function createRatio(transactions) {
+    let totalXpDown = 0;
+    let totalXpUp = 0;
+    const xpDown = transactions.filter(transaction => transaction.type === "down");
+    const xpUp = transactions.filter(transaction => transaction.type === "up");
 
-    auditData.forEach(audit => {
-        totalRatio += (audit.amount / audit.total);
+    xpDown.forEach(entry => {
+        totalXpDown += entry.amount;
     });
-    return totalRatio;
+
+    xpUp.forEach(entry => {
+        totalXpUp += entry.amount;
+    });
+
+    if (totalXpUp != 0 && totalXpDown != 0) {
+        return (totalXpUp / totalXpDown).toFixed(3);
+    } else {
+        return 0;
+    }
 }
 
 async function fetchUserData(token) {
@@ -216,45 +232,6 @@ async function fetchSkillData(token) {
     }
 }
 
-async function fetchAuditData(token) {
-    try {
-        const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                query: `
-                query {
-                    user {
-                        transactions {
-                            type
-                            amount
-                            path
-                            createdAt
-                        }
-                    }
-                }
-                `
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        if (result.errors) {
-            throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
-        }
-
-        return result.data.user[0].transactions.filter(txn => txn.type === 'audit');
-    } catch (error) {
-        throw new Error('Failed to fetch audit data');
-    }
-}
-
 function formatDate(date) {
     const options = { month: 'short', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
@@ -294,7 +271,7 @@ function renderXPChart(transactions) {
     const maxXP = Math.max(...accumulatedXP.map(d => d.y));
     if (maxXP === 0) {
         console.error("Max XP is 0, cannot render chart.");
-        return totalXP  ;
+        return totalXP; 
     }
 
     const linePoints = accumulatedXP.map(d => `${(d.x / (sortedXPData.length - 1)) * svgWidth},${svgHeight - (d.y / maxXP) * svgHeight}`).join(' ');
