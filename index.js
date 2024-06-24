@@ -42,7 +42,7 @@ async function authentificateUser() {
         const skillData = await fetchSkillData(token);
 
 
-        const totalXP = xpData.reduce((acc, txn) => acc + txn.amount, 0);
+        const totalXP = Math.round(xpData.reduce((acc, txn) => acc + txn.amount, 0));
         const auditData = await fetchAuditData(token);
         const totalAuditRatio = calculateTotalAuditRatio(auditData);
 
