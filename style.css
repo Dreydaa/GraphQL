@@ -95,6 +95,7 @@
 
 .displayUsername {
     display: flex;
+    text-wrap: wrap;
     margin: 10px;
     width: 200px;
     height: 100px;
