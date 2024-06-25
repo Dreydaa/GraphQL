@@ -84,6 +84,9 @@
 }
 
 .signOutBtn {
+    position: absolute;
+    left: 25%;
+    top: 0;
     width: 100px;
     height: 22px;
     font-weight: 600;
