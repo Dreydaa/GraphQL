@@ -286,7 +286,7 @@ function renderXPChart(transactions) {
     const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     polyline.setAttribute('points', linePoints);
     polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', '#4267B2');
+    polyline.setAttribute('stroke', '#6d597a');
     polyline.setAttribute('stroke-width', 2);
     svg.appendChild(polyline);
 
@@ -433,7 +433,7 @@ function renderSkillChart(skillData) {
         bar.setAttribute('y', svgHeight - padding - barHeight);
         bar.setAttribute('width', barWidth);
         bar.setAttribute('height', barHeight);
-        bar.setAttribute('fill', 'steelblue'); // Bar color
+        bar.setAttribute('fill', '#6d597a'); // Bar color
         svg.appendChild(bar);
 
         // Display skill type label below the bar
